@@ -706,22 +706,22 @@ class MyWindow(Gtk.Window):
                                    Gtk.PositionType.BOTTOM,
                                    1,
                                    10)
-        self.mt_out2_button = Gtk.Button("Choose a Model")
-        self.mt_out2_button.connect("clicked",
+        self.choose_a_model_button = Gtk.Button("Choose a Model")
+        self.choose_a_model_button.connect("clicked",
                                    self._on_dir_clicked,
                                    self.output_text)
-        inside_grid.attach_next_to(self.mt_out2_button,
+        inside_grid.attach_next_to(self.choose_a_model_button,
                                    self.mt_in_button,
                                    Gtk.PositionType.RIGHT,
                                    1,
                                    50)
 
-        self.mt_out3_button = Gtk.Button("Create a Model")
-        self.mt_out3_button.connect("clicked",
+        self.create_a_model_button = Gtk.Button("Create a Model")
+        self.create_a_model_button.connect("clicked",
                 self._create_model,
                 self.mt_out_text)
-        inside_grid.attach_next_to(self.mt_out3_button,
-                self.mt_out2_button,
+        inside_grid.attach_next_to(self.create_a_model_button,
+                self.choose_a_model_button,
                 Gtk.PositionType.RIGHT,
                 1,
                 50)
