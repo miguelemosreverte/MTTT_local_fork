@@ -1,0 +1,6 @@
+nohup: no se tendrá en cuenta la entrada
+Using SCRIPTS_ROOTDIR: /home/Migue/Escritorio/linux-64bit/scripts
+Using single-thread GIZA
+using gzip 
+ERROR: Cannot find mkcls, GIZA++/mgiza, & snt2cooc.out/snt2cooc in /home/Migue/Escritorio/linux-64bit/scripts.
+You MUST specify the parameter -external-bin-dir at /home/Migue/Escritorio/linux-64bit/scripts/training/train-model.perl line 371.
