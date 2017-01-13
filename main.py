@@ -110,6 +110,7 @@ class MyWindow(Gtk.Window):
             exit(1)
         # Check Moses Config file.
         self.moses_dir = ""
+        self.output_text = ""
         try:
             f = open(moses_dir_fn, 'r')
             self.moses_dir = f.read()
@@ -157,9 +158,10 @@ class MyWindow(Gtk.Window):
         # Add tabs to the notebook
         self.is_corpus_preparation_ready = False
         # Corpus Preparation tab
-        self._set_corpus_preparation()
+        #self._set_corpus_preparation()
         # LM & MT Training tab
-        self._set_training()
+        #self._set_training()
+
         # Translation tab
         self._set_translation()
         # Evaluation tab
@@ -171,7 +173,7 @@ class MyWindow(Gtk.Window):
         self.target_lang = None
         self.original_directory = os.getcwd()
 
-        self.notebook.set_current_page(2)
+        self.notebook.set_current_page(0)
 
     def _check_moses_installation(self, directory):
         """@brief     Determines if directory contains moses."""
@@ -590,7 +592,7 @@ class MyWindow(Gtk.Window):
                             1)
 
         self.training.add(grid)
-        self.notebook.insert_page(self.training, Gtk.Label('Training'), 1)
+        self.notebook.insert_page(self.training, Gtk.Label('Training'), 0)
 
     def _train(self, button):
         """@brief     Runs MT and LM training."""
@@ -761,6 +763,9 @@ class MyWindow(Gtk.Window):
                                   Gtk.Label('Machine Translation'),2)
 
     def _create_model(self, a, b):
+        self._set_training()
+        self._set_corpus_preparation()
+        self.notebook.show_all()
         self.notebook.set_current_page(0)
 
     def _is_file_not_empty(self, fn):
