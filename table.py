@@ -22,7 +22,7 @@ class MyTable(QTableWidget):
                 newitem = QTableWidgetItem(item)
                 self.setItem(x, y, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
-        
+
     def setdata(self, data):
 
         horHeaders = []
@@ -33,6 +33,7 @@ class MyTable(QTableWidget):
                 tableItem = QTextEdit()
                 tableItem.setFixedWidth(250)
                 tableItem.setText(item)
+                if y == 0: tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
                 #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
