@@ -10,6 +10,11 @@
 from PyQt4 import QtCore, QtGui
 from table import MyTable
 
+import sys
+from PyQt4.QtCore import QSize, Qt,QUrl
+from PyQt4.QtGui import *
+from PyQt4.QtWebKit import *
+
 _fromUtf8 = getattr(QtCore.QString, 'fromUtf8', lambda s: s)
 
 
@@ -20,6 +25,44 @@ def _translate(context, text, disambig):
             QtGui.QApplication, 'UnicodeUTF8',
             QtCore.QCoreApplication.Encoding))
 
+
+class WebWidget(QWidget):
+
+    def paintEvent(self, event):
+        painter = QPainter()
+        painter.begin(self)
+        painter.setBrush(Qt.white)
+        painter.setPen(Qt.black)
+        painter.drawRect(self.rect().adjusted(0, 0, -1, -1))
+        painter.setBrush(Qt.red)
+        painter.setPen(Qt.NoPen)
+        painter.drawRect(self.width()/4, self.height()/4,
+                         self.width()/2, self.height()/2)
+        painter.end()
+
+    def sizeHint(self):
+        return QSize(100, 100)
+
+class WebPluginFactory(QWebPluginFactory):
+
+    def __init__(self, parent = None):
+        QWebPluginFactory.__init__(self, parent)
+
+    def create(self, mimeType, url, names, values):
+        if mimeType == "x-pyqt/widget":
+            return WebWidget()
+
+    def plugins(self):
+        plugin = QWebPluginFactory.Plugin()
+        plugin.name = "PyQt Widget"
+        plugin.description = "An example Web plugin written with PyQt."
+        mimeType = QWebPluginFactory.MimeType()
+        mimeType.name = "x-pyqt/widget"
+        mimeType.description = "PyQt widget"
+        mimeType.fileExtensions = []
+        plugin.mimeTypes = [mimeType]
+        print "plugins"
+        return [plugin]
 
 class Ui_MainWindow(object):
 
@@ -128,6 +171,7 @@ class Ui_MainWindow(object):
         self.splitter = QtGui.QSplitter(self.tab_corpus_preparation)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName(_fromUtf8("splitter"))
+
         self.results_preprocessing = QtGui.QTextEdit(self.splitter)
         self.results_preprocessing.setObjectName(_fromUtf8("results_preprocessing"))
         self.verticalLayout_2.addWidget(self.splitter)
@@ -488,20 +532,45 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.btnDiff, 2, 4, 1, 1)
         self.btnDiff.hide()
 
-        self.btnStat = QtGui.QPushButton(self.groupBox)
-        self.btnStat.setEnabled(True)
-        self.btnStat.setMaximumSize(QtCore.QSize(120, 30))
-        self.btnStat.setFlat(False)
-        self.btnStat.setText(_translate("Dialog", "See stats", None))
-        self.btnStat.setObjectName(_fromUtf8("btnStat"))
-        self.gridLayout.addWidget(self.btnStat, 4, 4, 1, 1)
-        self.btnStat.hide()
+        self.btnStats = QtGui.QPushButton(self.groupBox)
+        self.btnStats.setEnabled(True)
+        self.btnStats.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnStats.setFlat(False)
+        self.btnStats.setText(_translate("Dialog", "See stats", None))
+        self.btnStats.setObjectName(_fromUtf8("btnStats"))
+        self.gridLayout.addWidget(self.btnStats, 4, 4, 1, 1)
+        self.btnStats.hide()
+
+
+
+
+        #BEGGINING OF tab_statistics
+        self.tab_statistics = QtGui.QWidget()
+        self.tab_statistics.setAutoFillBackground(True)
+        self.tab_statistics.setObjectName(_fromUtf8("tab_statistics"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.tab_statistics)
+        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setObjectName(_fromUtf8("splitter"))
+        self.verticalLayout_2.addWidget(self.splitter)
+        self.verticalLayout_2.setStretch(0, 2)
+        self.verticalLayout_2.setStretch(1, 8)
+        self.tab_statistics.setAutoFillBackground(True)
+        self.tab_statistics.setObjectName(_fromUtf8("tab_statistics"))
+        QWebSettings.globalSettings().setAttribute(QWebSettings.PluginsEnabled, True)
+        view = QWebView(self.splitter)
+        factory = WebPluginFactory()
+        view.page().setPluginFactory(factory)
+        view.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
+        view.show()
+
 
         self.tabWidget.addTab(self.tab_corpus_preparation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_training, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_machine_translation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_evaluation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_post_editing, _fromUtf8(""))
+        self.tabWidget.addTab(self.tab_statistics, _fromUtf8(""))
 
 
         self.verticalLayout_3.addWidget(self.tabWidget)
@@ -526,6 +595,16 @@ class Ui_MainWindow(object):
                 self.preprocessing_source_language = language
             elif source_or_target == "target":
                 self.preprocessing_target_language = language
+
+    def initialize_tab_statistics(self):
+        self.label_source_evaluation_tab.setText(_translate("MainWindow", "Source text", None))
+        self.btn_source_evaluation_tab.setText(_translate("Dialog", "...", None))
+        self.label_target_evaluation_tab.setText(_translate("MainWindow", "Target text", None))
+        self.btn_target_evaluation_tab.setText(_translate("Dialog", "...", None))
+        self.label_output_dir_evaluation_tab.setText(_translate("MainWindow", "Output text", None))
+        self.btn_output_dir_evaluation_tab.setText(_translate("Dialog", "...", None))
+        self.btnEvaluation.setText(_translate("MainWindow", "Start Evaluation", None))
+        self.groupBox_evaluation.setTitle(_translate("MainWindow", "Evaluation", None))
 
     def initialize_tab_evaluation(self):
         self.label_source_evaluation_tab.setText(_translate("MainWindow", "Source text", None))
@@ -575,6 +654,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_evaluation), _translate("MainWindow", "Evaluation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_statistics), _translate("MainWindow", "Statistics", None))
         self.labelInfo.setText(_translate("MainWindow", "<qt><a href=\"www\">Credits and Support</a></qt>", None))
 
 import icons_rc
