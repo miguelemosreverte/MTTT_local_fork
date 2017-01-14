@@ -40,6 +40,8 @@ from table import MyTable
 
 
 from migrated_backend_main import *
+from post_editing import *
+from statistics_module import Statistics
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     """
@@ -64,6 +66,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.modified_references_indices =  []
         self.saved_modified_references = []
         self.log = {}
+        self.statistics = None
 
         self.datamodel = dm
         self.engine = None
@@ -123,6 +126,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_table()
         self.btnNext.show()
         self.btnBack.show()
+        self.statistics = Statistics(self.source_text, self.target_text)
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
@@ -155,6 +159,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def show_selected_segment_from_search(self, event, tableItem, x, y):
         self.table_post_processing.scrollToItem(self.table_post_processing.item(x,y), QAbstractItemView.PositionAtCenter)
         self.table_post_processing.selectRow(x)
+
+    @pyqtSignature("")
+    def on_btnStats_clicked(self):
+        '''
+        with open("log.json") as json_data:
+            log= json.load(json_data)
+        print self.log
+        '''
+        self.statistics.calculate_statistics("time_per_segment")
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):
@@ -409,7 +422,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((x,y))
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
-        self.btnStat.show()
+        self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
         self.target_text[x] = str(tableItem.toPlainText())
