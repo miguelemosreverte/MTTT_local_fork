@@ -64,6 +64,7 @@ class Ui_MainWindow(object):
         self.initialize_tab_evaluation()
         self.initialize_post_editing_tab()
         self.initialize_tab_statistics()
+        self.initialize_tab_differences()
 
 
         self.tabWidget.addTab(self.tab_corpus_preparation, _fromUtf8(""))
@@ -71,6 +72,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_machine_translation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_evaluation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_post_editing, _fromUtf8(""))
+        self.tabWidget.addTab(self.tab_differences, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_statistics, _fromUtf8(""))
 
 
@@ -96,6 +98,75 @@ class Ui_MainWindow(object):
                 self.preprocessing_source_language = language
             elif source_or_target == "target":
                 self.preprocessing_target_language = language
+    def initialize_tab_differences(self):
+        self.tab_differences = QtGui.QWidget()
+        self.tab_differences.setAutoFillBackground(True)
+        self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.tab_differences)
+        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.groupBox = QtGui.QGroupBox(self.tab_differences)
+        self.groupBox.setObjectName(_fromUtf8("groupBox"))
+        self.gridLayout = QtGui.QGridLayout(self.groupBox)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+
+
+
+        self.verticalLayout_2.addWidget(self.groupBox)
+        splitter = QtGui.QSplitter(self.tab_differences)
+        splitter.setOrientation(QtCore.Qt.Horizontal)
+        splitter.setObjectName(_fromUtf8("splitter"))
+
+        splitter2 = QtGui.QSplitter(self.tab_differences)
+        splitter2.setOrientation(QtCore.Qt.Vertical)
+        splitter2.setObjectName(_fromUtf8("splitter2"))
+
+        self.table_differences= MyTable({'col1':[], 'col2':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,10,2)
+        splitter.addWidget(self.table_differences)
+        self.verticalLayout_2.addWidget(splitter)
+        self.verticalLayout_2.setStretch(1, 8)
+        self.tab_differences.setAutoFillBackground(True)
+        self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
+
+        self.search_table_differences= MyTable({'Search Results':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,10,1)
+        splitter.addWidget(self.search_table_differences)
+        self.verticalLayout_2.addWidget(splitter2)
+        self.verticalLayout_2.setStretch(1, 8)
+        self.tab_differences.setAutoFillBackground(True)
+        self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
+        #edit_target_differences
+        self.edit_search_differences = QtGui.QLineEdit(self.groupBox)
+        self.edit_search_differences.setReadOnly(False)
+        self.edit_search_differences.setObjectName(_fromUtf8("edit_search_differences"))
+        self.gridLayout.addWidget(self.edit_search_differences, 5, 3, 1, 1)
+
+        self.btnBackDifferences = QtGui.QPushButton(self.groupBox)
+        self.btnBackDifferences.setEnabled(True)
+        self.btnBackDifferences.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnBackDifferences.setFlat(False)
+        self.btnBackDifferences.setText(_translate("Dialog", "Back", None))
+        self.btnBackDifferences.setObjectName(_fromUtf8("btnBackDifferences"))
+        self.gridLayout.addWidget(self.btnBackDifferences, 1, 1, 1, 1)
+        self.btnBackDifferences.hide()
+
+        self.btnNextDifferences = QtGui.QPushButton(self.groupBox)
+        self.btnNextDifferences.setEnabled(True)
+        self.btnNextDifferences.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnNextDifferences.setFlat(False)
+        self.btnNextDifferences.setText(_translate("Dialog", "Next", None))
+        self.btnNextDifferences.setObjectName(_fromUtf8("btnNextDifferences"))
+        self.gridLayout.addWidget(self.btnNextDifferences, 1, 2, 1, 1)
+        self.btnNextDifferences.hide()
+
+        self.btnSearchDifferences = QtGui.QPushButton(self.groupBox)
+        self.btnSearchDifferences.setEnabled(True)
+        self.btnSearchDifferences.setFlat(False)
+        self.btnSearchDifferences.setObjectName(_fromUtf8("btnSearchDifferences"))
+        self.gridLayout.addWidget(self.btnSearchDifferences, 1, 3, 1, 1)
+        self.toggled_search_differences = True
+        self.search_table_differences.hide()
+        self.edit_search_differences.hide()
+
+        self.btnSearchDifferences.setText(_translate("Dialog", "Search", None))
 
     def initialize_tab_statistics(self):
         self.tab_statistics = QtGui.QWidget()
@@ -379,14 +450,14 @@ class Ui_MainWindow(object):
         splitter2.setOrientation(QtCore.Qt.Vertical)
         splitter2.setObjectName(_fromUtf8("splitter2"))
 
-        self.table_post_processing = MyTable({'col1':[], 'col2':[]},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,2)
+        self.table_post_processing = MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,2)
         splitter.addWidget(self.table_post_processing)
         self.verticalLayout_2.addWidget(splitter)
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_processing = MyTable({'Search Results':[]},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,1)
+        self.search_table_post_processing = MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,1)
         splitter.addWidget(self.search_table_post_processing)
         self.verticalLayout_2.addWidget(splitter2)
         self.verticalLayout_2.setStretch(1, 8)
@@ -417,23 +488,23 @@ class Ui_MainWindow(object):
         self.toggled_table_post_processing = True
         self.table_post_processing.hide()
 
-        self.btnBack = QtGui.QPushButton(self.groupBox)
-        self.btnBack.setEnabled(True)
-        self.btnBack.setMinimumSize(QtCore.QSize(120, 30))
-        self.btnBack.setFlat(False)
-        self.btnBack.setText(_translate("Dialog", "Back", None))
-        self.btnBack.setObjectName(_fromUtf8("btnBack"))
-        self.gridLayout.addWidget(self.btnBack, 5, 1, 1, 1)
-        self.btnBack.hide()
+        self.btnBackPostEditing = QtGui.QPushButton(self.groupBox)
+        self.btnBackPostEditing.setEnabled(True)
+        self.btnBackPostEditing.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnBackPostEditing.setFlat(False)
+        self.btnBackPostEditing.setText(_translate("Dialog", "Back", None))
+        self.btnBackPostEditing.setObjectName(_fromUtf8("btnBackPostEditing"))
+        self.gridLayout.addWidget(self.btnBackPostEditing, 5, 1, 1, 1)
+        self.btnBackPostEditing.hide()
 
-        self.btnNext = QtGui.QPushButton(self.groupBox)
-        self.btnNext.setEnabled(True)
-        self.btnNext.setMaximumSize(QtCore.QSize(120, 30))
-        self.btnNext.setFlat(False)
-        self.btnNext.setText(_translate("Dialog", "Next", None))
-        self.btnNext.setObjectName(_fromUtf8("btnNext"))
-        self.gridLayout.addWidget(self.btnNext, 5, 2, 1, 1)
-        self.btnNext.hide()
+        self.btnNextPostEditing = QtGui.QPushButton(self.groupBox)
+        self.btnNextPostEditing.setEnabled(True)
+        self.btnNextPostEditing.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnNextPostEditing.setFlat(False)
+        self.btnNextPostEditing.setText(_translate("Dialog", "Next", None))
+        self.btnNextPostEditing.setObjectName(_fromUtf8("btnNextPostEditing"))
+        self.gridLayout.addWidget(self.btnNextPostEditing, 5, 2, 1, 1)
+        self.btnNextPostEditing.hide()
 
         self.btnSave = QtGui.QPushButton(self.groupBox)
         self.btnSave.setEnabled(True)
@@ -606,9 +677,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_evaluation), _translate("MainWindow", "Evaluation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_differences), _translate("MainWindow", "Differences", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_statistics), _translate("MainWindow", "Statistics", None))
 
         self.tabWidget.setTabEnabled(5,False)
+        self.tabWidget.setTabEnabled(6,False)
         self.labelInfo.setText(_translate("MainWindow", "<qt><a href=\"www\">Credits and Support</a></qt>", None))
 
 import icons_rc

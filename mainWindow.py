@@ -64,6 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         css.close()
         '''
         self.post_editing_data = {}
+        self.differences_data = {}
         self.modified_references_indices =  []
         self.saved_modified_references = []
         self.log = {}
@@ -91,6 +92,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         text = self.migrated_backend_main._machine_translation(source,target)
         self.results_machine_translation.setText(text)
+
+
+    @pyqtSignature("")
+    def on_btnStartDifferences_clicked(self):
+        self.table_offset_Differences = 0
+        self.update_table_Differences()
+        self.btnNextDifferences.show()
+        self.btnBackDifferences.show()
+    def showDiffs(self):
+        self.table_offset_Differences = 0
+        self.update_table_Differences()
+        self.btnNextDifferences.show()
+        self.btnBackDifferences.show()
+        self.table_differences.show()
 
     @pyqtSignature("")
     def on_btnStartPostEditing_clicked(self):
@@ -124,21 +139,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                        self.target_text.append(textwrap.fill(line,40))
         self.post_editing_data["source"] = self.source_text
         self.post_editing_data["target"] = self.target_text
-        self.table_offset = 0
-        self.update_table()
-        self.btnNext.show()
-        self.btnBack.show()
+        self.table_offset_PostEdition = 0
+        self.table_offset_Differences = 0
+        self.update_table_PostEdition()
+        self.btnNextPostEditing.show()
+        self.btnBackPostEditing.show()
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
         self.search_on_table(text)
 
-    def update_table(self):
-        start = self.table_offset
-        end = self.table_offset + 10
+    def update_table_PostEdition(self):
+        start = self.table_offset_PostEdition
+        end = self.table_offset_PostEdition + 10
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
         self.table_post_processing.setdata(self.post_editing_data)
+
+    def update_table_Differences(self):
+        start = self.table_offset_Differences
+        end = self.table_offset_Differences + 10
+        self.differences_data["source"] = self.source_text[start:end]
+        self.differences_data["target"] = self.target_text[start:end]
+        self.table_differences.setdata(self.differences_data)
 
     def search_on_table(self, text):
         self.search_table_post_processing.clear()
@@ -162,6 +185,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_post_processing.selectRow(x)
 
     @pyqtSignature("")
+    def on_btnDiff_clicked(self):
+        self.tabWidget.setTabEnabled(5,True)
+        self.tabWidget.setCurrentIndex(5)
+        self.showDiffs()
+
+    @pyqtSignature("")
     def on_btnStats_clicked(self):
         if self.statistics is None:
             self.statistics = Statistics(self.source_text, self.target_text)
@@ -169,8 +198,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.HTMLview.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
         #self.HTMLview.reload()
         self.HTMLview.show()
-        self.tabWidget.setTabEnabled(5,True)
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setTabEnabled(6,True)
+        self.tabWidget.setCurrentIndex(6)
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):
@@ -181,15 +210,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnSave.hide()
 
     @pyqtSignature("")
-    def on_btnNext_clicked(self):
-        self.table_offset += 1
-        self.update_table()
+    def on_btnNextPostEditing_clicked(self):
+        self.table_offset_PostEdition += 1
+        self.update_table_PostEdition()
 
     @pyqtSignature("")
-    def on_btnBack_clicked(self):
-        self.table_offset -= 1
-        if self.table_offset < 0: self.table_offset = 0
-        self.update_table()
+    def on_btnBackPostEditing_clicked(self):
+        self.table_offset_PostEdition -= 1
+        if self.table_offset_PostEdition < 0: self.table_offset_PostEdition = 0
+        self.update_table_PostEdition()
+
+    @pyqtSignature("")
+    def on_btnNextDifferences_clicked(self):
+        self.table_offset_Differences += 1
+        self.update_table_Differences()
+
+    @pyqtSignature("")
+    def on_btnBackDifferences_clicked(self):
+        self.table_offset_Differences -= 1
+        if self.table_offset_Differences < 0: self.table_offset_Differences = 0
+        self.update_table_Differences()
+
+    @pyqtSignature("")
+    def on_btnSearchDifferences_clicked(self):
+        if self.toggled_search_differences:
+            self.toggled_search_differences = False
+            self.search_table_differences.show()
+            self.edit_search_differences.show()
+        else:
+            self.toggled_search_differences = True
+            self.search_table_differences.hide()
+            self.edit_search_differences.hide()
 
     @pyqtSignature("")
     def on_btnSearchPostEditing_clicked(self):
@@ -414,15 +465,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         p.setColor(tableItem.backgroundRole(), color)
         tableItem.setPalette(p)
 
-    def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
+    def on_tableItemDifferences_selected(self, event, tableItem, x, y):
+        pass
+    def on_tableItemPostEdition_selected(self, event, tableItem, x, y):
         if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
             self.changeQTextEditColor(self.lastChangedTableItem, QColor( 255, 255, 255,255))
         self.lastChangedTableItem = tableItem
         self.lastChangedTableItemCoordinates = (x,y)
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 153, 255, 255,255))
 
-    def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
-        y += self.table_offset
+    def on_tableItemDifferencestextChanged(self, tableItem, x, y):
+        pass
+    def on_tableItemPostEditing_textChanged(self, tableItem, x, y):
+        y += self.table_offset_PostEdition
         self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((x,y))
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
