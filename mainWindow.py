@@ -19,6 +19,8 @@ from PyQt4.QtGui import (
     QProgressDialog,
     QDialog,
     QFileDialog,
+    QTextEdit,
+    QAbstractItemView,
     )
 from PyQt4 import QtCore
 import sys
@@ -56,6 +58,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
            self.setStyleSheet(QtCore.QVariant(css.readAll()).toString())
         css.close()
         '''
+        self.post_editing_data = {}
 
         self.datamodel = dm
         self.engine = None
@@ -69,6 +72,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         import textwrap
         source = self.edit_source_machine_translation_tab.text()
         target = self.edit_target_machine_translation_tab.text()
+
         if not source:
             doAlert("Please choose a source text first.")
             return
@@ -98,7 +102,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.table_post_processing.hide()
         source_text = []
         target_text = []
-        data = {}
         with open(source) as fp:
                 for line in fp:
                     #line = unicode(line, 'iso8859-15')
@@ -109,20 +112,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     #line = unicode(line, 'iso8859-15')
                     if line != '\n':
                        target_text.append(textwrap.fill(line,40))
-        data['source'] = source_text
-        data['target'] = target_text
-        self.table_post_processing.setdata(data)
+        self.post_editing_data["source"] = source_text
+        self.post_editing_data["target"] = target_text
+        self.table_post_processing.setdata(self.post_editing_data)
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
-        self.search_on_table(text
+        self.search_on_table(text)
 
     def search_on_table(self, text):
-        pass
+        self.search_table_post_processing.clear()
+        text = str(text)
+        self.search_buttons = []
+        if self.post_editing_data["target"] and self.post_editing_data["source"]:
+            column = 1
+            for index,segment in enumerate(self.post_editing_data["target"]):
+                row = index
+                if text and text in segment:
+                    self.search_buttons.append(QTextEdit())
+                    tableItem = self.search_buttons[-1]
+                    tableItem.setFixedWidth(250)
+                    tableItem.setText(segment)
+                    tableItem.mousePressEvent = (lambda event= tableItem, tableItem= tableItem,x=row, y=column: self.show_selected_segment_from_search(event, tableItem,x,y))
+                    self.search_table_post_processing.setCellWidget(len(self.search_buttons)-1,0, tableItem)
 
     @pyqtSignature("")
-    def on_edit_search_post_editing_returnPressed(self):
-        print "CHANGED INDEED"
+    def show_selected_segment_from_search(self, event, tableItem, x, y):
+        self.table_post_processing.scrollToItem(self.table_post_processing.item(x,y), QAbstractItemView.PositionAtCenter)
+        self.table_post_processing.selectRow(x)
 
     @pyqtSignature("")
     def on_btnSearchPostEditing_clicked(self):

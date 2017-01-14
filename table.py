@@ -2,8 +2,6 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-data2 = {'col1':['1','2','3'], 'col2':['a','a','a']}
-
 class MyTable(QTableWidget):
     def __init__(self, data, tableItemChangedCallback,tableItemSelectedCallback,*args):
         QTableWidget.__init__(self, *args)
@@ -11,10 +9,10 @@ class MyTable(QTableWidget):
         self.tableItemSelectedCallback = tableItemSelectedCallback
         self.setAutoFillBackground(True)
         self.data = data
-        #self.setEditTriggers(QAbstractItemView.CurrentChanged)
+        self.setmydata()
         self.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        #self.resizeColumnsToContents()
-        #self.resizeRowsToContents()
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
 
     def setmydata(self):
         horHeaders = []
@@ -24,8 +22,7 @@ class MyTable(QTableWidget):
                 newitem = QTableWidgetItem(item)
                 self.setItem(x, y, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
-
-
+        
     def setdata(self, data):
 
         horHeaders = []
@@ -39,7 +36,6 @@ class MyTable(QTableWidget):
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
                 #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
-                print x,y
                 self.setCellWidget(x,y, tableItem)
 
                 #self.setItem(x, y, newitem)
