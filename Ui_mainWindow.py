@@ -421,7 +421,7 @@ class Ui_MainWindow(object):
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_processing = MyTable({},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,2)
+        self.search_table_post_processing = MyTable({'Search Results':[]},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,1)
         self.splitter.addWidget(self.search_table_post_processing)
         self.verticalLayout_2.addWidget(self.splitter2)
         self.verticalLayout_2.setStretch(1, 8)
