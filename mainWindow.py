@@ -100,25 +100,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.toggled_table_post_processing = True
             self.table_post_processing.hide()
-        source_text = []
-        target_text = []
+        self.source_text = []
+        self.target_text = []
         with open(source) as fp:
                 for line in fp:
                     #line = unicode(line, 'iso8859-15')
                     if line != '\n':
-                       source_text.append(textwrap.fill(line,40))
+                       self.source_text.append(textwrap.fill(line,40))
         with open(target) as fp:
                 for line in fp:
                     #line = unicode(line, 'iso8859-15')
                     if line != '\n':
-                       target_text.append(textwrap.fill(line,40))
-        self.post_editing_data["source"] = source_text
-        self.post_editing_data["target"] = target_text
-        self.table_post_processing.setdata(self.post_editing_data)
+                       self.target_text.append(textwrap.fill(line,40))
+        self.post_editing_data["source"] = self.source_text
+        self.post_editing_data["target"] = self.target_text
+        self.table_offset = 0
+        self.update_table()
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
         self.search_on_table(text)
+
+    def update_table(self):
+        start = self.table_offset
+        end = self.table_offset + 10
+        self.post_editing_data["source"] = self.source_text[start:end]
+        self.post_editing_data["target"] = self.target_text[start:end]
+        self.table_post_processing.setdata(self.post_editing_data)
 
     def search_on_table(self, text):
         self.search_table_post_processing.clear()
@@ -140,6 +148,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def show_selected_segment_from_search(self, event, tableItem, x, y):
         self.table_post_processing.scrollToItem(self.table_post_processing.item(x,y), QAbstractItemView.PositionAtCenter)
         self.table_post_processing.selectRow(x)
+
+    @pyqtSignature("")
+    def on_btnNext_clicked(self):
+        self.table_offset += 1
+        self.update_table()
+
+    @pyqtSignature("")
+    def on_btnBack_clicked(self):
+        self.table_offset -= 1
+        if self.table_offset < 0: self.table_offset = 0
+        self.update_table()
 
     @pyqtSignature("")
     def on_btnSearchPostEditing_clicked(self):

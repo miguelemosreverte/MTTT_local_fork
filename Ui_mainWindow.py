@@ -447,11 +447,27 @@ class Ui_MainWindow(object):
         self.btnStartPostEditing.setEnabled(True)
         self.btnStartPostEditing.setMinimumSize(QtCore.QSize(120, 30))
         self.btnStartPostEditing.setFlat(False)
+        self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
         self.btnStartPostEditing.setObjectName(_fromUtf8("btnStartPostEditing"))
         self.gridLayout.addWidget(self.btnStartPostEditing, 4, 1, 1, 2)
         self.toggled_table_post_processing = True
         self.table_post_processing.hide()
 
+        self.btnBack = QtGui.QPushButton(self.groupBox)
+        self.btnBack.setEnabled(True)
+        self.btnBack.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnBack.setFlat(False)
+        self.btnBack.setText(_translate("Dialog", "Back", None))
+        self.btnBack.setObjectName(_fromUtf8("btnBack"))
+        self.gridLayout.addWidget(self.btnBack, 5, 1, 1, 1)
+
+        self.btnNext = QtGui.QPushButton(self.groupBox)
+        self.btnNext.setEnabled(True)
+        self.btnNext.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnNext.setFlat(False)
+        self.btnNext.setText(_translate("Dialog", "Next", None))
+        self.btnNext.setObjectName(_fromUtf8("btnNext"))
+        self.gridLayout.addWidget(self.btnNext, 5, 2, 1, 1)
 
 
 
@@ -509,7 +525,6 @@ class Ui_MainWindow(object):
         self.label_target_post_editing.setText(_translate("MainWindow", "Target text", None))
         self.btn_target_post_editing.setText(_translate("Dialog", "...", None))
         self.btnSearchPostEditing.setText(_translate("Dialog", "Search", None))
-        self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
 
     def initialize_preprocessing_tab(self):
         self.label_source_preprocessing_tab.setText(_translate("MainWindow", "Source text", None))
