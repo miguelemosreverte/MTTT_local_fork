@@ -43,6 +43,7 @@ from table import MyTable
 
 from migrated_backend_main import *
 from statistics_module import Statistics
+from differences_module import Differences
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     """
@@ -71,6 +72,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.last_selected_search = None
         self.log = {}
         self.statistics = None
+        self.differences = None
         shutil.rmtree("./statistics/generated", ignore_errors=True)
         os.makedirs("./statistics/generated")
         self.datamodel = dm
@@ -162,11 +164,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.post_editing_data["target"] = self.target_text[start:end]
         self.table_post_editing.setdata(self.post_editing_data)
 
+
     def update_table_Differences(self):
         start = self.table_offset_Differences
         end = self.table_offset_Differences + 10
-        self.differences_data["source"] = self.source_text[start:end]
-        self.differences_data["target"] = self.target_text[start:end]
+        source_to_show = self.source_text[start:end]
+        target_to_show = self.target_text[start:end]
+
+
+        self.differences_data["source"] = source_to_show
+        self.differences_data["target"] = target_to_show
         self.table_differences.setdata(self.differences_data)
 
     def search_on_table_differences(self, text):
@@ -223,6 +230,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnDiff_clicked(self):
         self.tabWidget.setTabEnabled(5,True)
         self.tabWidget.setCurrentIndex(5)
+
+        if self.differences is None:
+            self.on_btnSave_clicked()#save in case it has not been saved
+            self.differences = Differences(self.original_target_path)
+        self.differences.get_enriched_text()
+        self.statistics.calculate_statistics("time_per_segment")
+
         self.showDiffs()
 
     @pyqtSignature("")
@@ -238,7 +252,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):
-        text_file = open(str(self.edit_target_post_editing.text()), "w")
+        self.original_target_path = str(self.edit_target_post_editing.text())
+        target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
+        text_file = open(str("./saved/" + target_filename), "w")
         text_file.write('\n'.join(self.target_text))
         text_file.close()
         self.save_using_log()
@@ -512,28 +528,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def on_tableItemDifferencestextChanged(self, tableItem, x, y):
         pass
-    def on_tableItemPostEditing_textChanged(self, tableItem, x, y):
-        y += self.table_offset_PostEdition
+    def on_tableItemPostEditing_textChanged(self, tableItem, row_index,column_index):
+        row_index += self.table_offset_PostEdition
         self.last_change_timestamp = int(time.time() * 1000)
-        self.modified_table_items_coordinates.append((x,y))
+        self.modified_table_items_coordinates.append((row_index,column_index))
         self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
-        self.target_text[x] = str(tableItem.toPlainText())
-        if y not in self.modified_references_indices:
-            self.modified_references_indices.append(y)
+        self.target_text[row_index] = str(tableItem.toPlainText())
+        if row_index not in self.modified_references_indices:
+            self.modified_references_indices.append(row_index)
 
     def save_using_log(self):
+
+        print self.modified_references_indices
         for index,modified_reference_index in enumerate(self.modified_references_indices):
             modified_segment = self.target_text[modified_reference_index]
-            if modified_segment not in self.saved_modified_references:
-                self.saved_modified_references.append(modified_segment)
-                if self.last_change_timestamp not in self.log:
-                    self.log[self.last_change_timestamp] = {}
-                self.log[self.last_change_timestamp][index] = modified_segment
-        with open("log.json", 'w') as outfile:
+            self.saved_modified_references.append(modified_segment)
+            if self.last_change_timestamp not in self.log:
+                self.log[self.last_change_timestamp] = {}
+            self.log[self.last_change_timestamp][index] = modified_segment
+        with open("./saved/" + "log.json", 'w') as outfile:
             json.dump(self.log, outfile)
+        self.modified_references_indices = []
+
+
 
     @pyqtSignature("QString")
     def on_labelInfo_linkActivated(self, link):
