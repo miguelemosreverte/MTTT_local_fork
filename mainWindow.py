@@ -420,6 +420,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 153, 255, 255,255))
 
     def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
+        y += self.table_offset
         self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((x,y))
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
@@ -427,8 +428,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnDiff.show()
         self.btnSave.show()
         self.target_text[x] = str(tableItem.toPlainText())
-        if x not in self.modified_references_indices:
-            self.modified_references_indices.append(x)
+        if y not in self.modified_references_indices:
+            self.modified_references_indices.append(y)
 
     def save_using_log(self):
         for index,modified_reference_index in enumerate(self.modified_references_indices):
