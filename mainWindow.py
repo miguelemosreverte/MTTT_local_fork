@@ -25,6 +25,7 @@ from PyQt4.QtGui import (
     )
 from PyQt4 import QtCore
 import sys
+import time
 import threading
 
 from Ui_mainWindow import Ui_MainWindow
@@ -60,6 +61,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         css.close()
         '''
         self.post_editing_data = {}
+        self.modified_references_indices =  []
+        self.saved_modified_references = []
+        self.log = {}
 
         self.datamodel = dm
         self.engine = None
@@ -157,6 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         text_file = open(str(self.edit_target_post_editing.text()), "w")
         text_file.write('\n'.join(self.target_text))
         text_file.close()
+        self.save_using_log()
         self.btnSave.hide()
 
     @pyqtSignature("")
@@ -401,12 +406,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 153, 255, 255,255))
 
     def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
+        self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((x,y))
         self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
         self.btnStat.show()
         self.btnDiff.show()
         self.btnSave.show()
         self.target_text[x] = str(tableItem.toPlainText())
+        if x not in self.modified_references_indices:
+            self.modified_references_indices.append(x)
+
+    def save_using_log(self):
+        for index,modified_reference_index in enumerate(self.modified_references_indices):
+            modified_segment = self.target_text[modified_reference_index]
+            if modified_segment not in self.saved_modified_references:
+                self.saved_modified_references.append(modified_segment)
+                if self.last_change_timestamp not in self.log:
+                    self.log[self.last_change_timestamp] = {}
+                self.log[self.last_change_timestamp][index] = modified_segment
+        with open("log.json", 'w') as outfile:
+            json.dump(self.log, outfile)
 
     @pyqtSignature("QString")
     def on_labelInfo_linkActivated(self, link):
