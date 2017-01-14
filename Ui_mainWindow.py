@@ -11,7 +11,7 @@ from PyQt4 import QtCore, QtGui
 from table import MyTable
 
 import sys
-from PyQt4.QtCore import QSize, Qt,QUrl
+from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
@@ -24,45 +24,6 @@ def _translate(context, text, disambig):
         getattr(
             QtGui.QApplication, 'UnicodeUTF8',
             QtCore.QCoreApplication.Encoding))
-
-
-class WebWidget(QWidget):
-
-    def paintEvent(self, event):
-        painter = QPainter()
-        painter.begin(self)
-        painter.setBrush(Qt.white)
-        painter.setPen(Qt.black)
-        painter.drawRect(self.rect().adjusted(0, 0, -1, -1))
-        painter.setBrush(Qt.red)
-        painter.setPen(Qt.NoPen)
-        painter.drawRect(self.width()/4, self.height()/4,
-                         self.width()/2, self.height()/2)
-        painter.end()
-
-    def sizeHint(self):
-        return QSize(100, 100)
-
-class WebPluginFactory(QWebPluginFactory):
-
-    def __init__(self, parent = None):
-        QWebPluginFactory.__init__(self, parent)
-
-    def create(self, mimeType, url, names, values):
-        if mimeType == "x-pyqt/widget":
-            return WebWidget()
-
-    def plugins(self):
-        plugin = QWebPluginFactory.Plugin()
-        plugin.name = "PyQt Widget"
-        plugin.description = "An example Web plugin written with PyQt."
-        mimeType = QWebPluginFactory.MimeType()
-        mimeType.name = "x-pyqt/widget"
-        mimeType.description = "PyQt widget"
-        mimeType.fileExtensions = []
-        plugin.mimeTypes = [mimeType]
-        print "plugins"
-        return [plugin]
 
 class Ui_MainWindow(object):
 
@@ -96,21 +57,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setAutoFillBackground(True)
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
 
-        #BEGGINING OF tab_corpus_preparation
-
-
-        #BEGGINING OF tab_training
-
-
-        #BEGGINING OF tab_machine_translation
-
-
-        #BEGGINING OF tab_evaluation
-
-
-        #BEGGINING OF tab_post_editing
-
-
 
         self.initialize_preprocessing_tab()
         self.initialize_tab_machine_translation()
@@ -118,9 +64,6 @@ class Ui_MainWindow(object):
         self.initialize_tab_evaluation()
         self.initialize_post_editing_tab()
         self.initialize_tab_statistics()
-
-        #BEGGINING OF tab_statistics
-
 
 
         self.tabWidget.addTab(self.tab_corpus_preparation, _fromUtf8(""))
@@ -168,12 +111,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_statistics.setAutoFillBackground(True)
         self.tab_statistics.setObjectName(_fromUtf8("tab_statistics"))
-        QWebSettings.globalSettings().setAttribute(QWebSettings.PluginsEnabled, True)
-        view = QWebView(splitter)
-        factory = WebPluginFactory()
-        view.page().setPluginFactory(factory)
-        view.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
-        view.show()
+        self.HTMLview = QWebView(splitter)
 
         self.label_source_evaluation_tab.setText(_translate("MainWindow", "Source text", None))
         self.btn_source_evaluation_tab.setText(_translate("Dialog", "...", None))
@@ -669,6 +607,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_statistics), _translate("MainWindow", "Statistics", None))
+
+        self.tabWidget.setTabEnabled(5,False)
         self.labelInfo.setText(_translate("MainWindow", "<qt><a href=\"www\">Credits and Support</a></qt>", None))
 
 import icons_rc

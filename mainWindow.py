@@ -9,6 +9,7 @@ from PyQt4.QtCore import (
     QObject,
     Qt,
     SIGNAL,
+    QUrl,
     )
 
 #from PyQt4 import QtCore
@@ -126,7 +127,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_table()
         self.btnNext.show()
         self.btnBack.show()
-        self.statistics = Statistics(self.source_text, self.target_text)
+        with open("log.json") as json_data:
+            log= json.load(json_data)
+        self.statistics = Statistics(self.source_text, self.target_text, log)
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
@@ -162,12 +165,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnStats_clicked(self):
-        '''
-        with open("log.json") as json_data:
-            log= json.load(json_data)
-        print self.log
-        '''
         self.statistics.calculate_statistics("time_per_segment")
+        self.HTMLview.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
+        self.HTMLview.show()
+        self.tabWidget.setTabEnabled(5,True)
+        self.tabWidget.setCurrentIndex(5)
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):

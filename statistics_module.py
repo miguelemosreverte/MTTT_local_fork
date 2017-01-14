@@ -1,9 +1,14 @@
+import os
+import itertools
+import html_injector
+import webbrowser
 
 class Statistics:
 
-    def __init__(self, source, target):
-        self.source = source
-        self.target = target
+    def __init__(self, source, target, log):
+        self.source_text = source
+        self.target_text = target
+        self.log = log
 
     def calculate_time_per_segment(self):
         seconds_spent_by_segment = {}
@@ -16,10 +21,10 @@ class Statistics:
             return itertools.izip(a, b)
 
         #calculate time spent by segment
-        for current_timestamp,next_timestamp in pairwise(sorted(self.paulaslog.keys())):
-            #for current_timestamp,next_timestamp in sorted(self.paulaslog.keys()):
+        for current_timestamp,next_timestamp in pairwise(sorted(self.log.keys())):
+            #for current_timestamp,next_timestamp in sorted(self.log.keys()):
             delta = (int(next_timestamp) - int(current_timestamp))/1000
-            for segment_index in self.paulaslog[current_timestamp]:
+            for segment_index in self.log[current_timestamp]:
                 if segment_index in seconds_spent_by_segment:
                     seconds_spent_by_segment[segment_index] += delta
                 else:
