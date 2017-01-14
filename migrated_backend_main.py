@@ -320,4 +320,36 @@ class MyWindow():
             # Set output to the output label.
         else:
             output = "ERROR: Please go to the first tab and complete the process."
+            return output
+
+    def _machine_translation(self, mt_in, mt_out):
+        in_file = adapt_path_for_cygwin(self.is_windows, mt_in)
+        out_file = adapt_path_for_cygwin(self.is_windows,mt_out)
+        output = "Running decoder....\n\n"
+        # Run the decoder.
+        cmd = get_test_command(self.moses_dir,
+                                   adapt_path_for_cygwin(self.is_windows, self.output_text) + "/train/model/moses.ini",
+                                   in_file,
+                                   out_file)
+        # use Popen for non-blocking
+        print cmd
+        proc = subprocess.Popen([cmd],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    shell=True)
+        (out, err) = proc.communicate()
+        f = open(out_file, 'r')
+        mt_result = f.read()
+        if mt_result == "":
+                if out != "":
+                    output += out
+                elif err != "":
+                    output += err
+        else:
+                output += "Best translation: " + mt_result
+
+        f.close()
         return output
+
+    def _evaluate(self, checkbox_indexes, evaluation_source, evaluation_reference):
+        return evaluate(checkbox_indexes, evaluation_source, evaluation_reference)

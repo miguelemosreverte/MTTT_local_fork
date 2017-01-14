@@ -127,5 +127,5 @@ def evaluate(checkbox_indexes, test, reference):
 
 
         checkbox_index += 1
-    return_results
+    print return_results
     return return_results

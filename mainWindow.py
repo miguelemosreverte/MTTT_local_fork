@@ -75,6 +75,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not target:
             doAlert("Please choose a target text first.")
             return
+        text = self.migrated_backend_main._machine_translation(source,target)
+        self.results_machine_translation.setText(text)
 
     @pyqtSignature("")
     def on_btnStartPostEditing_clicked(self):
@@ -130,6 +132,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.results_training.setText(text)
 
     @pyqtSignature("")
+    def on_btnEvaluation_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        source = self.edit_source_evaluation_tab.text()
+        target = self.edit_target_evaluation_tab.text()
+        output = self.edit_output_evaluation_tab.text()
+
+        if not source:
+            doAlert("Please choose a source text first.")
+            return
+        elif not target:
+            doAlert("Please choose a target text first.")
+            return
+        elif not output:
+            doAlert("Please choose an output directory first.")
+            return
+
+        checkbox_indexes = [False] * 8 #checkbox_indexes["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM"]
+        checkbox_indexes[0] = self.btn_check_WER.isChecked()
+        checkbox_indexes[1] = self.btn_check_PER.isChecked()
+        checkbox_indexes[2] = self.btn_check_HTER.isChecked()
+        checkbox_indexes[3] = self.btn_check_GTM.isChecked()
+        checkbox_indexes[4] = self.btn_check_BLEU.isChecked()
+        checkbox_indexes[5] = self.btn_check_BLEU2GRAM.isChecked()
+        checkbox_indexes[6] = self.btn_check_BLEU3GRAM.isChecked()
+        checkbox_indexes[7] = self.btn_check_BLEU4GRAM.isChecked()
+
+        text = self.migrated_backend_main._evaluate(checkbox_indexes, source, target)
+        self.results_evaluation.setText(text)
+
+    @pyqtSignature("")
     def on_btnPreProccess_clicked(self):
         """
         Slot documentation goes here.
@@ -158,6 +192,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             text = self.migrated_backend_main._prepare_corpus(output, source_language,target_language,source,target)
             self.results_preprocessing.setText(text)
+
+    @pyqtSignature("")
+    def on_btn_source_evaluation_tab_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setNameFilter("Choose a text source (*.txt)")
+        dialog.setViewMode(QFileDialog.Detail)
+        if dialog.exec_():
+            self.edit_source_evaluation_tab.setText(dialog.selectedFiles()[0])
+
+    @pyqtSignature("")
+    def on_btn_target_evaluation_tab_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setNameFilter("Choose a text target (*.txt)")
+        dialog.setViewMode(QFileDialog.Detail)
+        if dialog.exec_():
+            self.edit_target_evaluation_tab.setText(dialog.selectedFiles()[0])
+
+    @pyqtSignature("")
+    def on_btn_output_dir_evaluation_tab_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        self.edit_output_evaluation_tab.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")))
 
     @pyqtSignature("")
     def on_btn_source_machine_translation_tab_clicked(self):
