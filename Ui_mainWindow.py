@@ -25,6 +25,8 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         self.lastChangedTableItem = None
+        self.modified_table_items_coordinates = []
+        self.lastChangedTableItemCoordinates = (-1,-1)
 
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(705, 491)
@@ -536,16 +538,18 @@ class Ui_MainWindow(object):
 
     def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
         print str(tableItem.toPlainText()),x,y
-        if self.lastChangedTableItem is not None:
+        if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
             self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 255, 255, 255,255))
         self.lastChangedTableItem = tableItem
+        self.lastChangedTableItemCoordinates = (x,y)
         self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 153, 255, 255,255))
 
     def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
         print x
         print y
         print str(tableItem.toPlainText())
-        p = tableItem.palette()
+        self.modified_table_items_coordinates.append((x,y))
+        self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 51, 255, 153,255))
 
 import icons_rc
 
