@@ -323,6 +323,8 @@ class MyWindow():
             return output
 
     def _machine_translation(self, mt_in, mt_out):
+        mt_in = str(mt_in)
+        mt_out= str(mt_out)
         in_file = adapt_path_for_cygwin(self.is_windows, mt_in)
         out_file = adapt_path_for_cygwin(self.is_windows,mt_out)
         output = "Running decoder....\n\n"
@@ -352,4 +354,6 @@ class MyWindow():
         return output
 
     def _evaluate(self, checkbox_indexes, evaluation_source, evaluation_reference):
+        evaluation_source = str(evaluation_source)
+        evaluation_reference= str(evaluation_reference)
         return evaluate(checkbox_indexes, evaluation_source, evaluation_reference)
