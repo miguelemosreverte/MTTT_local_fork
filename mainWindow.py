@@ -28,6 +28,7 @@ from PyQt4 import QtCore
 import sys
 import time
 import threading
+import shutil
 
 from Ui_mainWindow import Ui_MainWindow
 from addMTModel import AddMTModelDialog
@@ -67,7 +68,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saved_modified_references = []
         self.log = {}
         self.statistics = None
-
+        shutil.rmtree("./statistics/generated", ignore_errors=True)
+        os.makedirs("./statistics/generated")
         self.datamodel = dm
         self.engine = None
         self.progress = None
