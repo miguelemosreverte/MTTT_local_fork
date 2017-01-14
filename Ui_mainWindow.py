@@ -24,6 +24,8 @@ def _translate(context, text, disambig):
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
+        self.lastChangedTableItem = None
+
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(705, 491)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -410,14 +412,14 @@ class Ui_MainWindow(object):
         self.splitter2.setOrientation(QtCore.Qt.Vertical)
         self.splitter2.setObjectName(_fromUtf8("splitter2"))
 
-        self.table_post_processing = MyTable({'col1':[], 'col2':[]},10,2)
+        self.table_post_processing = MyTable({'col1':[], 'col2':[]},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,2)
         self.splitter.addWidget(self.table_post_processing)
         self.verticalLayout_2.addWidget(self.splitter)
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_processing = MyTable({},10,2)
+        self.search_table_post_processing = MyTable({},self.on_btnStartPostEditing_textChanged,self.on_btnStartPostEditing_selected,10,2)
         self.splitter.addWidget(self.search_table_post_processing)
         self.verticalLayout_2.addWidget(self.splitter2)
         self.verticalLayout_2.setStretch(1, 8)
@@ -526,6 +528,24 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
         self.labelInfo.setText(_translate("MainWindow", "<qt><a href=\"www\">Credits and Support</a></qt>", None))
+
+    def changeQTextEditColor(self, tableItem, color):
+        p = tableItem.palette()
+        p.setColor(tableItem.backgroundRole(), color)
+        tableItem.setPalette(p)
+
+    def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
+        print str(tableItem.toPlainText()),x,y
+        if self.lastChangedTableItem is not None:
+            self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 255, 255, 255,255))
+        self.lastChangedTableItem = tableItem
+        self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 153, 255, 255,255))
+
+    def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
+        print x
+        print y
+        print str(tableItem.toPlainText())
+        p = tableItem.palette()
 
 import icons_rc
 

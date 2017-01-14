@@ -5,8 +5,10 @@ from PyQt4.QtGui import *
 data2 = {'col1':['1','2','3'], 'col2':['a','a','a']}
 
 class MyTable(QTableWidget):
-    def __init__(self, data, *args):
+    def __init__(self, data, tableItemChangedCallback,tableItemSelectedCallback,*args):
         QTableWidget.__init__(self, *args)
+        self.tableItemChangedCallback = tableItemChangedCallback
+        self.tableItemSelectedCallback = tableItemSelectedCallback
         self.setAutoFillBackground(True)
         self.data = data
         #self.setEditTriggers(QAbstractItemView.CurrentChanged)
@@ -16,24 +18,31 @@ class MyTable(QTableWidget):
 
     def setmydata(self):
         horHeaders = []
-        for n, key in enumerate(sorted(self.data.keys())):
+        for y, key in enumerate(sorted(self.data.keys())):
             horHeaders.append(key)
-            for m, item in enumerate(self.data[key]):
+            for x, item in enumerate(self.data[key]):
                 newitem = QTableWidgetItem(item)
-                self.setItem(m, n, newitem)
+                self.setItem(x, y, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
 
+
     def setdata(self, data):
+
         horHeaders = []
-        for n, key in enumerate(sorted(data.keys())):
+        for y, key in enumerate(sorted(data.keys())):
             horHeaders.append(key)
-            for m, item in enumerate(data[key]):
+            for x, item in enumerate(data[key]):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
                 tableItem.setFixedWidth(250)
                 tableItem.setText(item)
-                self.setCellWidget(m,n, tableItem )
-                #self.setItem(m, n, newitem)
+                tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
+                tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
+                #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
+                print x,y
+                self.setCellWidget(x,y, tableItem)
+
+                #self.setItem(x, y, newitem)
 
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
