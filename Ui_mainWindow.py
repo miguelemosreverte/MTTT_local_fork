@@ -494,7 +494,7 @@ class Ui_MainWindow(object):
         self.btnStat.setFlat(False)
         self.btnStat.setText(_translate("Dialog", "See stats", None))
         self.btnStat.setObjectName(_fromUtf8("btnStat"))
-        self.gridLayout.addWidget(self.btnStat, 3, 4, 1, 1)
+        self.gridLayout.addWidget(self.btnStat, 4, 4, 1, 1)
         self.btnStat.hide()
 
         self.tabWidget.addTab(self.tab_corpus_preparation, _fromUtf8(""))
