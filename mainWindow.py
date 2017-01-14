@@ -67,6 +67,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.differences_data = {}
         self.modified_references_indices =  []
         self.saved_modified_references = []
+        self.last_changed_item_in_post_edition = None
+        self.last_selected_search = None
         self.log = {}
         self.statistics = None
         shutil.rmtree("./statistics/generated", ignore_errors=True)
@@ -119,12 +121,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             doAlert("Please choose a target text first.")
             return
 
-        if self.toggled_table_post_processing:
-            self.toggled_table_post_processing = False
-            self.table_post_processing.show()
+        if self.toggled_table_post_editing:
+            self.toggled_table_post_editing= False
+            self.table_post_editing.show()
         else:
-            self.toggled_table_post_processing = True
-            self.table_post_processing.hide()
+            self.toggled_table_post_editing= True
+            self.table_post_editing.hide()
         self.source_text = []
         self.target_text = []
         with open(source) as fp:
@@ -146,15 +148,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnBackPostEditing.show()
 
     @pyqtSignature("QString")
+    def on_edit_search_differences_textEdited(self,text):
+        self.search_on_table_differences(text)
+
+    @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
-        self.search_on_table(text)
+        self.search_on_table_post_editing(text)
 
     def update_table_PostEdition(self):
         start = self.table_offset_PostEdition
         end = self.table_offset_PostEdition + 10
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
-        self.table_post_processing.setdata(self.post_editing_data)
+        self.table_post_editing.setdata(self.post_editing_data)
 
     def update_table_Differences(self):
         start = self.table_offset_Differences
@@ -163,8 +169,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.differences_data["target"] = self.target_text[start:end]
         self.table_differences.setdata(self.differences_data)
 
-    def search_on_table(self, text):
-        self.search_table_post_processing.clear()
+    def search_on_table_differences(self, text):
+        self.search_table_differences.clear()
+        text = str(text)
+        self.search_buttons = []
+        if self.differences_data["target"] and self.differences_data["source"]:
+            column = 1
+            for index,segment in enumerate(self.differences_data["target"]):
+                row = index
+                if text and text in segment:
+                    self.search_buttons.append(QTextEdit())
+                    tableItem = self.search_buttons[-1]
+                    tableItem.setFixedWidth(250)
+                    tableItem.setText(segment)
+                    tableItem.setReadOnly(True)
+                    tableItem.mousePressEvent = (lambda event= tableItem, tableItem= tableItem,x=row, y=column: self.show_selected_segment_from_search_differences(event, tableItem,x,y))
+                    self.search_table_differences.setCellWidget(len(self.search_buttons)-1,0, tableItem)
+    def search_on_table_post_editing(self, text):
+        self.search_table_post_editing.clear()
         text = str(text)
         self.search_buttons = []
         if self.post_editing_data["target"] and self.post_editing_data["source"]:
@@ -176,13 +198,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     tableItem = self.search_buttons[-1]
                     tableItem.setFixedWidth(250)
                     tableItem.setText(segment)
-                    tableItem.mousePressEvent = (lambda event= tableItem, tableItem= tableItem,x=row, y=column: self.show_selected_segment_from_search(event, tableItem,x,y))
-                    self.search_table_post_processing.setCellWidget(len(self.search_buttons)-1,0, tableItem)
+                    tableItem.setReadOnly(True)
+                    tableItem.mousePressEvent = (lambda event= tableItem, tableItem= tableItem,x=row, y=column: self.show_selected_segment_from_search_post_editing(event, tableItem,x,y))
+                    self.search_table_post_editing.setCellWidget(len(self.search_buttons)-1,0, tableItem)
 
     @pyqtSignature("")
-    def show_selected_segment_from_search(self, event, tableItem, x, y):
-        self.table_post_processing.scrollToItem(self.table_post_processing.item(x,y), QAbstractItemView.PositionAtCenter)
-        self.table_post_processing.selectRow(x)
+    def show_selected_segment_from_search_differences(self, event, tableItem, x, y):
+        if self.last_selected_search is not None:
+            self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
+        self.last_selected_search = tableItem
+        self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
+        self.table_differences.scrollToItem(self.table_differences.item(x,y), QAbstractItemView.PositionAtCenter)
+        self.table_differences.selectRow(x)
+    @pyqtSignature("")
+    def show_selected_segment_from_search_post_editing(self, event, tableItem, x, y):
+        if self.last_selected_search is not None:
+            self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
+        self.last_selected_search = tableItem
+        self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
+        self.table_post_editing.scrollToItem(self.table_post_editing.item(x,y), QAbstractItemView.PositionAtCenter)
+        self.table_post_editing.selectRow(x)
 
     @pyqtSignature("")
     def on_btnDiff_clicked(self):
@@ -246,11 +281,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnSearchPostEditing_clicked(self):
         if self.toggled_search_post_editing:
             self.toggled_search_post_editing = False
-            self.search_table_post_processing.show()
+            self.search_table_post_editing.show()
             self.edit_search_post_editing.show()
         else:
             self.toggled_search_post_editing = True
-            self.search_table_post_processing.hide()
+            self.search_table_post_editing.hide()
             self.edit_search_post_editing.hide()
 
     @pyqtSignature("")
@@ -467,12 +502,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def on_tableItemDifferences_selected(self, event, tableItem, x, y):
         pass
+
     def on_tableItemPostEdition_selected(self, event, tableItem, x, y):
-        if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
-            self.changeQTextEditColor(self.lastChangedTableItem, QColor( 255, 255, 255,255))
-        self.lastChangedTableItem = tableItem
-        self.lastChangedTableItemCoordinates = (x,y)
-        self.changeQTextEditColor(self.lastChangedTableItem, QColor( 153, 255, 255,255))
+        if self.last_changed_item_in_post_edition is not None and self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates:
+            self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
+        self.last_changed_item_in_post_edition = tableItem
+        self.last_changed_item_in_post_editionCoordinates = (x,y)
+        self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 153, 255, 255,255))
 
     def on_tableItemDifferencestextChanged(self, tableItem, x, y):
         pass
@@ -480,7 +516,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         y += self.table_offset_PostEdition
         self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((x,y))
-        self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
+        self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()

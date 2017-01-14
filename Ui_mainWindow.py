@@ -28,7 +28,6 @@ def _translate(context, text, disambig):
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
-        self.lastChangedTableItem = None
         self.modified_table_items_coordinates = []
         self.lastChangedTableItemCoordinates = (-1,-1)
 
@@ -450,15 +449,15 @@ class Ui_MainWindow(object):
         splitter2.setOrientation(QtCore.Qt.Vertical)
         splitter2.setObjectName(_fromUtf8("splitter2"))
 
-        self.table_post_processing = MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,2)
-        splitter.addWidget(self.table_post_processing)
+        self.table_post_editing= MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,2)
+        splitter.addWidget(self.table_post_editing)
         self.verticalLayout_2.addWidget(splitter)
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_processing = MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,1)
-        splitter.addWidget(self.search_table_post_processing)
+        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,1)
+        splitter.addWidget(self.search_table_post_editing)
         self.verticalLayout_2.addWidget(splitter2)
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
@@ -475,7 +474,7 @@ class Ui_MainWindow(object):
         self.btnSearchPostEditing.setObjectName(_fromUtf8("btnSearchPostEditing"))
         self.gridLayout.addWidget(self.btnSearchPostEditing, 4, 3, 1, 1)
         self.toggled_search_post_editing = True
-        self.search_table_post_processing.hide()
+        self.search_table_post_editing.hide()
         self.edit_search_post_editing.hide()
 
         self.btnStartPostEditing = QtGui.QPushButton(self.groupBox)
@@ -485,8 +484,8 @@ class Ui_MainWindow(object):
         self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
         self.btnStartPostEditing.setObjectName(_fromUtf8("btnStartPostEditing"))
         self.gridLayout.addWidget(self.btnStartPostEditing, 4, 1, 1, 2)
-        self.toggled_table_post_processing = True
-        self.table_post_processing.hide()
+        self.toggled_table_post_editing= True
+        self.table_post_editing.hide()
 
         self.btnBackPostEditing = QtGui.QPushButton(self.groupBox)
         self.btnBackPostEditing.setEnabled(True)
@@ -676,7 +675,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_training), _translate("MainWindow", "Training", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_evaluation), _translate("MainWindow", "Evaluation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Edition", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_differences), _translate("MainWindow", "Differences", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_statistics), _translate("MainWindow", "Statistics", None))
 
