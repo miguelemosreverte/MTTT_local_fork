@@ -435,7 +435,6 @@ class Ui_MainWindow(object):
 
         self.btnSearchPostEditing = QtGui.QPushButton(self.groupBox)
         self.btnSearchPostEditing.setEnabled(True)
-        self.btnSearchPostEditing.setMinimumSize(QtCore.QSize(120, 30))
         self.btnSearchPostEditing.setFlat(False)
         self.btnSearchPostEditing.setObjectName(_fromUtf8("btnSearchPostEditing"))
         self.gridLayout.addWidget(self.btnSearchPostEditing, 4, 3, 1, 1)
@@ -460,6 +459,7 @@ class Ui_MainWindow(object):
         self.btnBack.setText(_translate("Dialog", "Back", None))
         self.btnBack.setObjectName(_fromUtf8("btnBack"))
         self.gridLayout.addWidget(self.btnBack, 5, 1, 1, 1)
+        self.btnBack.hide()
 
         self.btnNext = QtGui.QPushButton(self.groupBox)
         self.btnNext.setEnabled(True)
@@ -468,9 +468,34 @@ class Ui_MainWindow(object):
         self.btnNext.setText(_translate("Dialog", "Next", None))
         self.btnNext.setObjectName(_fromUtf8("btnNext"))
         self.gridLayout.addWidget(self.btnNext, 5, 2, 1, 1)
+        self.btnNext.hide()
 
+        self.btnSave = QtGui.QPushButton(self.groupBox)
+        self.btnSave.setEnabled(True)
+        self.btnSave.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnSave.setFlat(False)
+        self.btnSave.setText(_translate("Dialog", "Save", None))
+        self.btnSave.setObjectName(_fromUtf8("btnSave"))
+        self.gridLayout.addWidget(self.btnSave, 1, 4, 1, 1)
+        self.btnSave.hide()
 
+        self.btnDiff = QtGui.QPushButton(self.groupBox)
+        self.btnDiff.setEnabled(True)
+        self.btnDiff.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnDiff.setFlat(False)
+        self.btnDiff.setText(_translate("Dialog", "See changes", None))
+        self.btnDiff.setObjectName(_fromUtf8("btnDiff"))
+        self.gridLayout.addWidget(self.btnDiff, 2, 4, 1, 1)
+        self.btnDiff.hide()
 
+        self.btnStat = QtGui.QPushButton(self.groupBox)
+        self.btnStat.setEnabled(True)
+        self.btnStat.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnStat.setFlat(False)
+        self.btnStat.setText(_translate("Dialog", "See stats", None))
+        self.btnStat.setObjectName(_fromUtf8("btnStat"))
+        self.gridLayout.addWidget(self.btnStat, 3, 4, 1, 1)
+        self.btnStat.hide()
 
         self.tabWidget.addTab(self.tab_corpus_preparation, _fromUtf8(""))
         self.tabWidget.addTab(self.tab_training, _fromUtf8(""))
@@ -551,23 +576,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_machine_translation), _translate("MainWindow", "Machine Translation", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_post_editing), _translate("MainWindow", "Post Processing", None))
         self.labelInfo.setText(_translate("MainWindow", "<qt><a href=\"www\">Credits and Support</a></qt>", None))
-
-    def changeQTextEditColor(self, tableItem, color):
-        p = tableItem.palette()
-        p.setColor(tableItem.backgroundRole(), color)
-        tableItem.setPalette(p)
-
-    def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
-        if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
-            self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 255, 255, 255,255))
-        self.lastChangedTableItem = tableItem
-        self.lastChangedTableItemCoordinates = (x,y)
-        self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 153, 255, 255,255))
-
-    def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
-        #print str(tableItem.toPlainText())
-        self.modified_table_items_coordinates.append((x,y))
-        self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 51, 255, 153,255))
 
 import icons_rc
 

@@ -20,6 +20,7 @@ from PyQt4.QtGui import (
     QDialog,
     QFileDialog,
     QTextEdit,
+    QColor,
     QAbstractItemView,
     )
 from PyQt4 import QtCore
@@ -116,6 +117,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.post_editing_data["target"] = self.target_text
         self.table_offset = 0
         self.update_table()
+        self.btnNext.show()
+        self.btnBack.show()
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
@@ -148,6 +151,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def show_selected_segment_from_search(self, event, tableItem, x, y):
         self.table_post_processing.scrollToItem(self.table_post_processing.item(x,y), QAbstractItemView.PositionAtCenter)
         self.table_post_processing.selectRow(x)
+
+    @pyqtSignature("")
+    def on_btnSave_clicked(self):
+        text_file = open(str(self.edit_target_post_editing.text()), "w")
+        text_file.write('\n'.join(self.target_text))
+        text_file.close()
+        self.btnSave.hide()
 
     @pyqtSignature("")
     def on_btnNext_clicked(self):
@@ -209,7 +219,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checkbox_indexes[7] = self.btn_check_BLEU4GRAM.isChecked()
 
         text = self.migrated_backend_main._evaluate(checkbox_indexes, source, target)
-        print text
         self.results_evaluation.setText(text)
 
     @pyqtSignature("")
@@ -378,6 +387,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             doAlert("Translation failed!")
         self.btnTranslate.setEnabled(True)
         self.btnTranslate.setFocus()
+
+    def changeQTextEditColor(self, tableItem, color):
+        p = tableItem.palette()
+        p.setColor(tableItem.backgroundRole(), color)
+        tableItem.setPalette(p)
+
+    def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
+        if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
+            self.changeQTextEditColor(self.lastChangedTableItem, QColor( 255, 255, 255,255))
+        self.lastChangedTableItem = tableItem
+        self.lastChangedTableItemCoordinates = (x,y)
+        self.changeQTextEditColor(self.lastChangedTableItem, QColor( 153, 255, 255,255))
+
+    def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
+        self.modified_table_items_coordinates.append((x,y))
+        self.changeQTextEditColor(self.lastChangedTableItem, QColor( 51, 255, 153,255))
+        self.btnStat.show()
+        self.btnDiff.show()
+        self.btnSave.show()
+        self.target_text[x] = str(tableItem.toPlainText())
 
     @pyqtSignature("QString")
     def on_labelInfo_linkActivated(self, link):
