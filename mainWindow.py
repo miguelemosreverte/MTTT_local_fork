@@ -113,15 +113,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         data['target'] = target_text
         self.table_post_processing.setdata(data)
 
+    @pyqtSignature("QString")
+    def on_edit_search_post_editing_textEdited(self,text):
+        self.search_on_table(text
+
+    def search_on_table(self, text):
+        pass
+
+    @pyqtSignature("")
+    def on_edit_search_post_editing_returnPressed(self):
+        print "CHANGED INDEED"
 
     @pyqtSignature("")
     def on_btnSearchPostEditing_clicked(self):
         if self.toggled_search_post_editing:
             self.toggled_search_post_editing = False
             self.search_table_post_processing.show()
+            self.edit_search_post_editing.show()
         else:
             self.toggled_search_post_editing = True
             self.search_table_post_processing.hide()
+            self.edit_search_post_editing.hide()
 
     @pyqtSignature("")
     def on_btnTraining_clicked(self):

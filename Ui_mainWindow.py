@@ -427,6 +427,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
+        #edit_target_post_editing
+        self.edit_search_post_editing = QtGui.QLineEdit(self.groupBox)
+        self.edit_search_post_editing.setReadOnly(False)
+        self.edit_search_post_editing.setObjectName(_fromUtf8("edit_search_post_editing"))
+        self.gridLayout.addWidget(self.edit_search_post_editing, 5, 3, 1, 1)
 
         self.btnSearchPostEditing = QtGui.QPushButton(self.groupBox)
         self.btnSearchPostEditing.setEnabled(True)
@@ -436,6 +441,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.btnSearchPostEditing, 4, 3, 1, 1)
         self.toggled_search_post_editing = True
         self.search_table_post_processing.hide()
+        self.edit_search_post_editing.hide()
 
         self.btnStartPostEditing = QtGui.QPushButton(self.groupBox)
         self.btnStartPostEditing.setEnabled(True)
@@ -537,7 +543,6 @@ class Ui_MainWindow(object):
         tableItem.setPalette(p)
 
     def on_btnStartPostEditing_selected(self, event, tableItem, x, y):
-        print str(tableItem.toPlainText()),x,y
         if self.lastChangedTableItem is not None and self.lastChangedTableItemCoordinates not in self.modified_table_items_coordinates:
             self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 255, 255, 255,255))
         self.lastChangedTableItem = tableItem
@@ -545,9 +550,7 @@ class Ui_MainWindow(object):
         self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 153, 255, 255,255))
 
     def on_btnStartPostEditing_textChanged(self, tableItem, x, y):
-        print x
-        print y
-        print str(tableItem.toPlainText())
+        #print str(tableItem.toPlainText())
         self.modified_table_items_coordinates.append((x,y))
         self.changeQTextEditColor(self.lastChangedTableItem, QtGui.QColor( 51, 255, 153,255))
 
