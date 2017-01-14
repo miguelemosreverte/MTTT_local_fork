@@ -1,14 +1,19 @@
 import os
 import itertools
+import urlparse
 import html_injector
 import webbrowser
+import json
 
 class Statistics:
 
-    def __init__(self, source, target, log):
+    def __init__(self, source, target):
         self.source_text = source
         self.target_text = target
-        self.log = log
+
+        with open("log.json") as json_data:
+            self.log = json.load(json_data)
+        print self.log
 
     def calculate_time_per_segment(self):
         seconds_spent_by_segment = {}

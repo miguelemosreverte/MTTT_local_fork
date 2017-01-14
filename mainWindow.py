@@ -41,7 +41,6 @@ from table import MyTable
 
 
 from migrated_backend_main import *
-from post_editing import *
 from statistics_module import Statistics
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -127,9 +126,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_table()
         self.btnNext.show()
         self.btnBack.show()
-        with open("log.json") as json_data:
-            log= json.load(json_data)
-        self.statistics = Statistics(self.source_text, self.target_text, log)
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
@@ -165,8 +161,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnStats_clicked(self):
+        if self.statistics is None:
+            self.statistics = Statistics(self.source_text, self.target_text)
         self.statistics.calculate_statistics("time_per_segment")
         self.HTMLview.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
+        #self.HTMLview.reload()
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(5,True)
         self.tabWidget.setCurrentIndex(5)
