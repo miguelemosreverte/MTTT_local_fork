@@ -161,6 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checkbox_indexes[7] = self.btn_check_BLEU4GRAM.isChecked()
 
         text = self.migrated_backend_main._evaluate(checkbox_indexes, source, target)
+        print text
         self.results_evaluation.setText(text)
 
     @pyqtSignature("")
