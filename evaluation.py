@@ -91,10 +91,12 @@ def evaluate(checkbox_indexes, test, reference):
             else:
                 if checkbox_indexes_constants[checkbox_index] == "WER" or checkbox_indexes_constants[checkbox_index] == "PER":
                     command = EXEC_PERL + DIRECTORY +  checkbox_indexes_constants[checkbox_index] + ".pl" + " -t " + test + " -r " + reference
+                    print command
                     proc = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE)
                     result = "\n" + checkbox_indexes_constants[checkbox_index] + "..... " + proc.stdout.read()
                     return_results += result
                     cached_results[key] =  result
+
 
                 if checkbox_indexes_constants[checkbox_index] == "HTER":
                     command_2 = EXEC_JAVA + "-cp " + TER_DIRECTORY + " TERtest " + " -r " + reference + " -h " + test
@@ -127,5 +129,4 @@ def evaluate(checkbox_indexes, test, reference):
 
 
         checkbox_index += 1
-    print return_results
     return return_results

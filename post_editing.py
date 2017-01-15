@@ -65,46 +65,17 @@ except ImportError:
 
 from TTTtable import Table
 import html_injector
+import webbrowser
 
 class PostEditing:
 
-    def __init__(self, post_editing_source, post_editing_reference, notebook, grid):
-        self.post_editing_source = post_editing_source
-        self.post_editing_reference = post_editing_reference
-        self.translation_tab_grid = grid
-        self.notebook = notebook
-        self.modified_references =  []
-        self.saved_modified_references = []
+    def __init__(self, paulaslog, source, target):
 
-        self.tables = {}
-        self.paulaslog = {}
+        self.paulaslog = paulaslog
+        self.source = source
+        self.target = target
 
-        self.saved_absolute_path = os.path.abspath("saved")
-        filename = post_editing_source[post_editing_source.rfind('/'):]
-        filename_without_extension = os.path.splitext(filename)[0]
-        filename_extension = os.path.splitext(filename)[1]
-        self.saved_origin_filepath = os.path.abspath("saved") + filename
-
-
-        self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.saveChangedFromPostEditing_event,self.saveChangedFromPostEditing, self.calculate_statistics_event, self.translation_tab_grid)
-
-        self.paulas_log_filepath = self.saved_absolute_path + '/paulaslog.json'
-
-
-        if os.path.exists(self.saved_absolute_path):
-            if os.path.exists(self.saved_absolute_path + "_but_to_be_deleted_soon"):
-                    shutil.rmtree(self.saved_absolute_path + "_but_to_be_deleted_soon", ignore_errors=True)
-            os.rename(self.saved_absolute_path,self.saved_absolute_path + "_but_to_be_deleted_soon")
-        os.makedirs(self.saved_absolute_path)
-        shutil.rmtree("./statistics/generated", ignore_errors=True)
-        os.makedirs(os.path.abspath("statistics/generated"))
-
-        self.translation_tab_grid.show_all()
-        self.tables["translation_table"].save_post_editing_changes_button.hide()
-        self.tables["translation_table"].statistics_button.hide()
-        self.tables["translation_table"].insertions_statistics_button.hide()
-        self.tables["translation_table"].deletions_statistics_button.hide()
-        self.tables["translation_table"].time_statistics_button.hide()
+        self.paulas_log_filepath = 'log.json'
 
     def calculate_time_per_segment(self):
         seconds_spent_by_segment = {}
@@ -144,10 +115,10 @@ class PostEditing:
         percentaje_spent_by_segment=self.tables["translation_table"].calculate_insertions_or_deletions_percentajes(False)
         title = "<th>Segment </th><th>" + '%'+ " of insertions made</th>"
         return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
-    def format_table_data(self, segment_index, table_contents):
-        segment_source = table_contents[0][segment_index]
-        segment_modified = table_contents[1][segment_index]
-        id_source = segment_index
+    def format_table_data(self, segment_index):
+        segment_source = self.source[int(segment_index)]
+        segment_modified =  self.target[int(segment_index)]
+        id_source = int(segment_index)
         id_target = id_source + 100000
         final_output = '<a href='+ '"' + "javascript:showhide('" +str(id_source)+ "')" + '"' + '><input type="button" value="Source"></a>'
         final_output += '<a href='+ '"' + "javascript:showhide('" +str(id_target)+ "')" + '"' + '><input type="button" value="Target"></a>'
@@ -157,8 +128,9 @@ class PostEditing:
     def build_table(self, percentaje_spent_by_segment):
         table_data_list = []
         for segment_index in percentaje_spent_by_segment:
+            print segment_index
             string = "<tr><td>"+str(segment_index)
-            string += self.format_table_data(segment_index,self.tables["translation_table"].tables_content)+"</td>"
+            string += self.format_table_data(segment_index)+"</td>"
             string += "<td>"+str(percentaje_spent_by_segment[segment_index])+"</td></tr>"
             table_data_list.append(string)
         return ''.join(table_data_list)
