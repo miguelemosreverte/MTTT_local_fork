@@ -232,10 +232,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnDiff_clicked(self):
         self.tabWidget.setTabEnabled(5,True)
         self.tabWidget.setCurrentIndex(5)
-
+        self.on_btnSave_clicked();self.btnSave.show()#show the button anyway so that users dont panic
         if self.differences is None:
             self.differences = Differences(self.original_target_path)
-        self.on_btnSave_clicked;self.btnSave.show()#show the button anyway so that users dont panic
         self.enriched_target_text_original,self.enriched_target_text_modified = self.differences.get_enriched_text()
         self.showDiffs()
 

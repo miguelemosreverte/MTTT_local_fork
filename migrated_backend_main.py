@@ -54,7 +54,6 @@ install_and_import("itertools")
 from commands import *
 from files_processing import *
 from evaluation import *
-from post_editing import PostEditing
 from constants import moses_dir_fn
 
 
