@@ -4,6 +4,7 @@ import urlparse
 import html_injector
 import webbrowser
 import json
+import difflib
 
 class Statistics:
 
@@ -41,12 +42,44 @@ class Statistics:
         title = "<th>Segment </th><th>" + '%'+ " of the time spent </th>"
         return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
 
+    def get_insertion_and_deletions(self, original, modified):
+        s = difflib.SequenceMatcher(None, original, modified)
+        insertions = []
+        deletions = []
+        for tag, i1, i2, j1, j2 in s.get_opcodes():
+            if tag == "insert" or tag == "replace":insertions.append((j1,j2))
+            if tag == "delete"or tag == "replace": deletions.append((i1,i2))
+        return (insertions,deletions)
+
+    def calculate_insertions_or_deletions_percentajes(self, get_removals_percentaje = True):
+
+        total_insertions_or_deletions = 0
+        insertions_or_deletions_per_segment = {}
+        source_segments = self.source_text
+        modified_segments = self.target_text
+
+        for index, (a,b) in enumerate(zip(source_segments, modified_segments)):
+            insertions_or_deletions = self.get_insertion_and_deletions(a,b)[get_removals_percentaje]
+            for c in insertions_or_deletions:
+                if index not in insertions_or_deletions_per_segment:
+                    insertions_or_deletions_per_segment[index] = c[1] - c[0]
+                else:
+                    insertions_or_deletions_per_segment[index] += c[1] - c[0]
+        #get total
+        for a in insertions_or_deletions_per_segment:
+            total_insertions_or_deletions += insertions_or_deletions_per_segment[a]
+        #get percentajes
+        for a in insertions_or_deletions_per_segment:
+            insertions_or_deletions_per_segment[a] =  insertions_or_deletions_per_segment[a] * 100 / float(total_insertions_or_deletions)
+
+        return insertions_or_deletions_per_segment
+
     def calculate_deletions_per_segment(self):
-        percentaje_spent_by_segment=self.tables["translation_table"].calculate_insertions_or_deletions_percentajes(True)
+        percentaje_spent_by_segment=self.calculate_insertions_or_deletions_percentajes(1)
         title = "<th>Segment </th><th>" + '%'+ " of deletions made</th>"
         return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
     def calculate_insertions_per_segment(self):
-        percentaje_spent_by_segment=self.tables["translation_table"].calculate_insertions_or_deletions_percentajes(False)
+        percentaje_spent_by_segment=self.calculate_insertions_or_deletions_percentajes(0)
         title = "<th>Segment </th><th>" + '%'+ " of insertions made</th>"
         return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
     def format_table_data(self, segment_index):
@@ -83,7 +116,7 @@ class Statistics:
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
-        with open("log.json") as json_data:
+        with open("./saved/log.json") as json_data:
             self.log = json.load(json_data)
         print self.log
 

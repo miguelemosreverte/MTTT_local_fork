@@ -68,6 +68,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.differences_data = {}
         self.modified_references_indices =  []
         self.saved_modified_references = []
+        self.unmodified_target = []
+        self.modified_target = []
         self.last_changed_item_in_post_edition = None
         self.last_selected_search = None
         self.log = {}
@@ -232,33 +234,96 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnDiff_clicked(self):
+        self.save();
         self.tabWidget.setTabEnabled(5,True)
         self.tabWidget.setCurrentIndex(5)
-        self.on_btnSave_clicked();self.btnSave.show()#show the button anyway so that users dont panic
+        self.get_modified_and_unmodified_target()
         if self.differences is None:
-            self.differences = Differences(self.original_target_path)
+            self.differences = Differences(self.unmodified_target, self.modified_target)
         self.enriched_target_text_original,self.enriched_target_text_modified = self.differences.get_enriched_text()
         self.showDiffs()
 
     @pyqtSignature("")
     def on_btnStats_clicked(self):
+        self.save();
+        self.btnFirstStat.show()
+        self.btnSecondStat.show()
+        self.btnThirdStat.show()
+
+    def load_log(self):
+        log = {}
+        log_filepath = os.path.abspath("./saved/" + "log.json")
+        try:
+            with open(log_filepath) as json_data:
+                log = json.load(json_data)
+        except:pass
+        return log
+
+    def get_latest_modifications (self):
+        log = self.load_log()
+        last_modifications = {}
+        for a in sorted(log.keys()):
+            for b in log[a]:
+                last_modifications[b] = log[a][b]
+        return last_modifications
+
+    def get_modified_and_unmodified_target(self):
+        with open(self.original_target_path) as fp:
+            for line in fp:
+                if line != '\n':
+                    self.unmodified_target.append(line)
+        latest_modifications = self.get_latest_modifications()
+        for index, line in enumerate(self.unmodified_target):
+            if str(index) in latest_modifications:
+                self.modified_target.append(latest_modifications[str(index)])
+            else:
+                self.modified_target.append(line)
+
+    @pyqtSignature("")
+    def on_btnFirstStat_clicked(self):
+        self.get_modified_and_unmodified_target()
         if self.statistics is None:
-            self.statistics = Statistics(self.source_text, self.target_text)
+            self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("time_per_segment")
         self.HTMLview.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
-        #self.HTMLview.reload()
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(6,True)
         self.tabWidget.setCurrentIndex(6)
 
     @pyqtSignature("")
-    def on_btnSave_clicked(self):
+    def on_btnSecondStat_clicked(self):
+        self.get_modified_and_unmodified_target()
+        if self.statistics is None:
+            self.get_modified_and_unmodified_target()
+            self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics.calculate_statistics("insertions")
+        self.HTMLview.setUrl(QUrl("Statistics/generated/insertions.html"));
+        self.HTMLview.show()
+        self.tabWidget.setTabEnabled(6,True)
+        self.tabWidget.setCurrentIndex(6)
+
+    @pyqtSignature("")
+    def on_btnThirdStat_clicked(self):
+        self.get_modified_and_unmodified_target()
+        if self.statistics is None:
+            self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics.calculate_statistics("deletions")
+        self.HTMLview.setUrl(QUrl("Statistics/generated/deletions.html"));
+        self.HTMLview.show()
+        self.tabWidget.setTabEnabled(6,True)
+        self.tabWidget.setCurrentIndex(6)
+
+    def save(self):
         self.original_target_path = str(self.edit_target_post_editing.text())
         target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
         text_file = open(str("./saved/" + target_filename), "w")
         text_file.write('\n'.join(self.target_text))
         text_file.close()
         self.save_using_log()
+
+    @pyqtSignature("")
+    def on_btnSave_clicked(self):
+        self.save()
         self.btnSave.hide()
 
     @pyqtSignature("")
