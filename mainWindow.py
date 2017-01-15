@@ -268,6 +268,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return last_modifications
 
     def get_modified_and_unmodified_target(self):
+        self.unmodified_target = []
+        self.modified_target = []
         with open(self.original_target_path) as fp:
             for line in fp:
                 if line != '\n':
@@ -292,7 +294,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnSecondStat_clicked(self):
-        self.save()
+        self.save_using_log()
         self.get_modified_and_unmodified_target()
         self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("insertions")
@@ -606,13 +608,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.modified_references_indices.append(row_index)
 
     def save_using_log(self):
-        print "SAVING LOG"
         for modified_reference_index in self.modified_references_indices:
             modified_segment = self.target_text[modified_reference_index]
             self.saved_modified_references.append(modified_segment)
             if self.last_change_timestamp not in self.log:
                 self.log[self.last_change_timestamp] = {}
-            print "index of ",modified_segment," is ", modified_reference_index
             self.log[self.last_change_timestamp][modified_reference_index] = modified_segment
         with open("./saved/" + "log.json", 'w') as outfile:
             json.dump(self.log, outfile)

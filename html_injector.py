@@ -17,6 +17,7 @@ def combine_and_save_to_html(filename):
     text_file.write(content)
     text_file.write(footer)
     text_file.close()
+    print "statistics/generated/" + filename + ".html", "OVERWRITTEN"
 
 def get_template(filepath):
     lines = []

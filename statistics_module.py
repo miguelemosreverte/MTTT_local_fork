@@ -95,7 +95,6 @@ class Statistics:
     def build_table(self, percentaje_spent_by_segment):
         table_data_list = []
         for segment_index in percentaje_spent_by_segment:
-            print segment_index
             string = "<tr><td>"+str(segment_index)
             string += self.format_table_data(segment_index)+"</td>"
             string += "<td>"+str(percentaje_spent_by_segment[segment_index])+"</td></tr>"
@@ -129,26 +128,3 @@ class Statistics:
             pie_as_json_string,table_data,title = self.calculate_deletions_per_segment()
         if pie_as_json_string:
             html_injector.inject_into_html(pie_as_json_string, table_data, title, statistics_name)
-            self.add_statistics(statistics_name)
-
-    def add_statistics(self, statistic_to_show):
-        uri = "statistics/generated/" + statistic_to_show + '.html'
-        uri = os.path.realpath(uri)
-        uri = urlparse.ParseResult('file', '', uri, '', '', '')
-        uri = urlparse.urlunparse(uri)
-        is_linux = os.name == 'posix'
-        is_windows = os.name == 'nt'
-        if is_linux:
-            try:
-                self.notebook.remove_page(6)
-                html = "<h1>This is HTML content</h1><p>I am displaying this in python</p"
-                view = WebKit.WebView()
-                view.open(html)
-                view.load_uri(uri)
-                childWidget = view
-                self.notebook.insert_page(childWidget, Gtk.Label('Statistics'), 6)
-                self.update_notebook()
-            except:
-                webbrowser.open(uri,new=2)
-        if is_windows:
-            webbrowser.open(uri,new=2)

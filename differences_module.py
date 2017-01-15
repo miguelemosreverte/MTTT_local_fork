@@ -24,13 +24,11 @@ class Differences:
         for tuple in array_to_use:
             start = tuple[0] + offset
             end = tuple[1] + offset
-            print start,end
             enrichedText = "<span style=\"background-color: " + nice_color + "; font-weight:600;\" >"
             enrichedText += segment_to_use[start:end]
             enrichedText += "</span>"
             segment_to_use = segment_to_use[:start] + enrichedText + segment_to_use[end:]
             offset += len(enrichedText) - (end - start)
-        if "span" in segment_to_use: print segment_to_use
         return segment_to_use
 
     def get_insertion_and_deletions(self, original_segment, modified_segment):
