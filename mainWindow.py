@@ -57,13 +57,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Constructor
         """
         QMainWindow.__init__(self, parent)
-        '''
-        css = QtCore.QFile('./gui/paper/gtk.css')
+
+        css = QtCore.QFile('./gui/pyqt.css')
         css.open(QtCore.QIODevice.ReadOnly)
         if css.isOpen():
            self.setStyleSheet(QtCore.QVariant(css.readAll()).toString())
         css.close()
-        '''
+
         self.post_editing_data = {}
         self.differences_data = {}
         self.modified_references_indices =  []
