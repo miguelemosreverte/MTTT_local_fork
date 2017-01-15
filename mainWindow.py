@@ -166,14 +166,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def update_table_Differences(self):
+        '''
         start = self.table_offset_Differences
         end = self.table_offset_Differences + 10
         source_to_show = self.source_text[start:end]
         target_to_show = self.target_text[start:end]
+        '''
 
 
-        self.differences_data["source"] = source_to_show
-        self.differences_data["target"] = target_to_show
+        self.differences_data["source"] = self.enriched_target_text_original
+        self.differences_data["target"] = self.enriched_target_text_modified
         self.table_differences.setdata(self.differences_data)
 
     def search_on_table_differences(self, text):
@@ -232,11 +234,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setCurrentIndex(5)
 
         if self.differences is None:
-            self.on_btnSave_clicked()#save in case it has not been saved
             self.differences = Differences(self.original_target_path)
-        self.differences.get_enriched_text()
-        self.statistics.calculate_statistics("time_per_segment")
-
+        self.on_btnSave_clicked;self.btnSave.show()#show the button anyway so that users dont panic
+        self.enriched_target_text_original,self.enriched_target_text_modified = self.differences.get_enriched_text()
         self.showDiffs()
 
     @pyqtSignature("")
@@ -541,8 +541,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.modified_references_indices.append(row_index)
 
     def save_using_log(self):
-
-        print self.modified_references_indices
         for index,modified_reference_index in enumerate(self.modified_references_indices):
             modified_segment = self.target_text[modified_reference_index]
             self.saved_modified_references.append(modified_segment)

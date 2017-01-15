@@ -39,6 +39,7 @@ class MyTable(QTableWidget):
                 #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
                 self.setCellWidget(x,y, tableItem)
 
+
                 #self.setItem(x, y, newitem)
 
         self.resizeColumnsToContents()

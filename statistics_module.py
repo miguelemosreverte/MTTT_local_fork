@@ -11,10 +11,6 @@ class Statistics:
         self.source_text = source
         self.target_text = target
 
-        with open("log.json") as json_data:
-            self.log = json.load(json_data)
-        print self.log
-
     def calculate_time_per_segment(self):
         seconds_spent_by_segment = {}
         percentaje_spent_by_segment = {}
@@ -87,6 +83,10 @@ class Statistics:
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
+        with open("log.json") as json_data:
+            self.log = json.load(json_data)
+        print self.log
+
         pie_as_json_string = ""
         if statistics_name == "time_per_segment":
             pie_as_json_string,table_data,title = self.calculate_time_per_segment()
