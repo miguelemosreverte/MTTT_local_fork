@@ -75,6 +75,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.differences = None
         shutil.rmtree("./statistics/generated", ignore_errors=True)
         os.makedirs("./statistics/generated")
+        shutil.rmtree("./saved", ignore_errors=True)
+        os.makedirs("./saved")
         self.datamodel = dm
         self.engine = None
         self.progress = None
