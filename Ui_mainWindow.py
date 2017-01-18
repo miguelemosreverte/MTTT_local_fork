@@ -56,6 +56,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setAutoFillBackground(True)
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
 
+        self.background_color_palette = QtGui.QPalette()
+        self.background_color_palette.setColor(QtGui.QPalette.Background,QColor("#edf2f6"))
 
         self.initialize_preprocessing_tab()
         self.initialize_tab_machine_translation()
@@ -100,6 +102,7 @@ class Ui_MainWindow(object):
     def initialize_tab_differences(self):
         self.tab_differences = QtGui.QWidget()
         self.tab_differences.setAutoFillBackground(True)
+        self.tab_differences.setPalette(self.background_color_palette)
         self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_differences)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -170,6 +173,7 @@ class Ui_MainWindow(object):
     def initialize_tab_statistics(self):
         self.tab_statistics = QtGui.QWidget()
         self.tab_statistics.setAutoFillBackground(True)
+        self.tab_statistics.setPalette(self.background_color_palette)
         self.tab_statistics.setObjectName(_fromUtf8("tab_statistics"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_statistics)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -194,6 +198,7 @@ class Ui_MainWindow(object):
     def initialize_tab_evaluation(self):
         self.tab_evaluation = QtGui.QWidget()
         self.tab_evaluation.setAutoFillBackground(True)
+        self.tab_evaluation.setPalette(self.background_color_palette)
         self.tab_evaluation.setObjectName(_fromUtf8("tab_evaluation"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_evaluation)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -339,6 +344,7 @@ class Ui_MainWindow(object):
     def initialize_tab_machine_translation(self):
         self.tab_machine_translation = QtGui.QWidget()
         self.tab_machine_translation.setAutoFillBackground(True)
+        self.tab_machine_translation.setPalette(self.background_color_palette)
         self.tab_machine_translation.setObjectName(_fromUtf8("tab_machine_translation"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_machine_translation)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -388,6 +394,7 @@ class Ui_MainWindow(object):
     def initialize_post_editing_tab(self):
         self.tab_post_editing = QtGui.QWidget()
         self.tab_post_editing.setAutoFillBackground(True)
+        self.tab_post_editing.setPalette(self.background_color_palette)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_post_editing)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -468,7 +475,6 @@ class Ui_MainWindow(object):
         self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
         self.btnStartPostEditing.setObjectName(_fromUtf8("btnStartPostEditing"))
         gridLayout.addWidget(self.btnStartPostEditing, 4, 1, 1, 2)
-        self.toggled_table_post_editing= True
         self.table_post_editing.hide()
 
         self.btnBackPostEditing = QtGui.QPushButton(groupBox)
@@ -553,6 +559,7 @@ class Ui_MainWindow(object):
     def initialize_preprocessing_tab(self):
         self.tab_corpus_preparation = QtGui.QWidget()
         self.tab_corpus_preparation.setAutoFillBackground(True)
+        self.tab_corpus_preparation.setPalette(self.background_color_palette)
         self.tab_corpus_preparation.setObjectName(_fromUtf8("tab_corpus_preparation"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_corpus_preparation)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -560,7 +567,7 @@ class Ui_MainWindow(object):
 
         groupBox = QtGui.QGroupBox(self.tab_corpus_preparation)
         groupBox.setObjectName(_fromUtf8("groupBox"))
-        groupBox.setStyleSheet("""#groupBox 
+        groupBox.setStyleSheet("""#groupBox
         {
         border: none;
         background-color: none;
@@ -718,6 +725,7 @@ class Ui_MainWindow(object):
     def initialize_training_tab(self):
         self.tab_training = QtGui.QWidget()
         self.tab_training.setAutoFillBackground(True)
+        self.tab_training.setPalette(self.background_color_palette)
         self.tab_training.setObjectName(_fromUtf8("tab_training"))
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_training)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
