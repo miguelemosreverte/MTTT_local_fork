@@ -123,12 +123,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             doAlert("Please choose a target text first.")
             return
 
-        if self.toggled_table_post_editing:
-            self.toggled_table_post_editing= False
-            self.table_post_editing.show()
-        else:
-            self.toggled_table_post_editing= True
-            self.table_post_editing.hide()
+        self.table_post_editing.show()
+        
         self.source_text = []
         self.target_text = []
         with open(source) as fp:
