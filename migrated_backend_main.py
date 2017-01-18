@@ -195,7 +195,7 @@ class MyWindow():
             lm_tok = generate_lm_tok_fn(output_directory)
             cmds.append(get_tokenize_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
                                              self.source_lang,
-                                             adapt_path_for_cygwin(self.is_windows,self.LM),
+                                             adapt_path_for_cygwin(self.is_windows,self.lm_text),
                                              lm_tok))
 
             # 2) Truecaser training
