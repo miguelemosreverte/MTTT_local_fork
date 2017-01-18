@@ -157,10 +157,11 @@ class MyWindow():
         self.moses_dir = moses.detect()
         return self.moses_dir
 
-    def _prepare_corpus(self, output_text, source_lang, target_lang, st_train, tt_train):
+    def _prepare_corpus(self, output_text, source_lang, target_lang, st_train, tt_train, lm_text):
         self.output_text = str(output_text)
         self.source_lang = str(source_lang)
         self.target_lang = str(target_lang)
+        self.lm_text = str(lm_text)
         self.tt_train = str(tt_train)
         self.st_train = str(st_train)
 
@@ -194,7 +195,7 @@ class MyWindow():
             lm_tok = generate_lm_tok_fn(output_directory)
             cmds.append(get_tokenize_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
                                              self.source_lang,
-                                             adapt_path_for_cygwin(self.is_windows,self.tt_train),
+                                             adapt_path_for_cygwin(self.is_windows,self.LM),
                                              lm_tok))
 
             # 2) Truecaser training

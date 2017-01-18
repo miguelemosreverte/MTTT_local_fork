@@ -418,6 +418,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         source = self.edit_source_preprocessing_tab.text()
         target = self.edit_target_preprocessing_tab.text()
+        lm_text = self.edit_lm_text_preprocessing_tab.text()
         output = self.edit_output_preprocessing_tab.text()
         source_language = self.preprocessing_target_language
         target_language = self.preprocessing_target_language
@@ -438,7 +439,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             doAlert("Please choose an preprocessing_target_language directory first.")
             return
         else:
-            text = self.migrated_backend_main._prepare_corpus(output, source_language,target_language,source,target)
+            text = self.migrated_backend_main._prepare_corpus(output, source_language,target_language,source,target,lm_text)
             self.results_preprocessing.setText(text)
 
     @pyqtSignature("")
@@ -448,7 +449,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setNameFilter("Choose a text source (*.txt)")
+        dialog.setNameFilter("Choose a text source (*.*)")
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_source_evaluation_tab.setText(dialog.selectedFiles()[0])
@@ -460,7 +461,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setNameFilter("Choose a text target (*.txt)")
+        dialog.setNameFilter("Choose a text target (*.*)")
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_target_evaluation_tab.setText(dialog.selectedFiles()[0])
@@ -521,13 +522,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.edit_target_post_editing.setText(dialog.selectedFiles()[0])
 
     @pyqtSignature("")
+    def on_btn_lm_text_preprocessing_tab_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setNameFilter("Choose a text source (*.*)")
+        dialog.setViewMode(QFileDialog.Detail)
+        if dialog.exec_():
+            self.edit_lm_text_preprocessing_tab.setText(dialog.selectedFiles()[0])
+    @pyqtSignature("")
     def on_btn_source_preprocessing_tab_clicked(self):
         """
         Slot documentation goes here.
         """
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setNameFilter("Choose a text source (*.txt)")
+        dialog.setNameFilter("Choose a text source (*.*)")
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_source_preprocessing_tab.setText(dialog.selectedFiles()[0])
@@ -539,7 +551,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setNameFilter("Choose a text target (*.txt)")
+        dialog.setNameFilter("Choose a text target (*.*)")
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_target_preprocessing_tab.setText(dialog.selectedFiles()[0])

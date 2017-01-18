@@ -586,6 +586,16 @@ class Ui_MainWindow(object):
         self.preprocessing_source_language = ""
         self.btn_choose_source_lang_preprocessing.setMenu(menu)
         self.gridLayout.addWidget(self.btn_choose_source_lang_preprocessing, 1, 0, 1, 1)
+        #btn_choose_target_lang_preprocessing
+        self.btn_choose_target_lang_preprocessing = QtGui.QPushButton('Target Language')
+        menu = QtGui.QMenu()
+        menu.addAction('EN', lambda: self.choose_language("preprocessing","target",'EN'))
+        menu.addAction('FR', lambda: self.choose_language("preprocessing","target",'FR'))
+        menu.addAction('DE', lambda: self.choose_language("preprocessing","target",'DE'))
+        self.preprocessing_target_language = ""
+        self.btn_choose_target_lang_preprocessing.setMenu(menu)
+        self.gridLayout.addWidget(self.btn_choose_target_lang_preprocessing, 2, 0, 1, 1)
+
         #label_source_preprocessing_tab
         self.label_source_preprocessing_tab = QtGui.QLabel(self.groupBox)
         self.label_source_preprocessing_tab.setObjectName(_fromUtf8("label_source_preprocessing_tab"))
@@ -600,15 +610,6 @@ class Ui_MainWindow(object):
         self.edit_source_preprocessing_tab.setObjectName(_fromUtf8("edit_source_preprocessing_tab"))
         self.gridLayout.addWidget(self.edit_source_preprocessing_tab, 1, 2, 1, 1)
 
-        #btn_choose_target_lang_preprocessing
-        self.btn_choose_target_lang_preprocessing = QtGui.QPushButton('Target Language')
-        menu = QtGui.QMenu()
-        menu.addAction('EN', lambda: self.choose_language("preprocessing","target",'EN'))
-        menu.addAction('FR', lambda: self.choose_language("preprocessing","target",'FR'))
-        menu.addAction('DE', lambda: self.choose_language("preprocessing","target",'DE'))
-        self.preprocessing_target_language = ""
-        self.btn_choose_target_lang_preprocessing.setMenu(menu)
-        self.gridLayout.addWidget(self.btn_choose_target_lang_preprocessing, 2, 0, 1, 1)
         #label_target_preprocessing_tab
         self.label_target_preprocessing_tab = QtGui.QLabel(self.groupBox)
         self.label_target_preprocessing_tab.setObjectName(_fromUtf8("label_target_preprocessing_tab"))
@@ -623,19 +624,33 @@ class Ui_MainWindow(object):
         self.edit_target_preprocessing_tab.setObjectName(_fromUtf8("edit_target_preprocessing_tab"))
         self.gridLayout.addWidget(self.edit_target_preprocessing_tab, 2, 2, 1, 1)
 
+        #label_lm_text_preprocessing_tab
+        self.label_lm_text_preprocessing_tab = QtGui.QLabel(self.groupBox)
+        self.label_lm_text_preprocessing_tab.setObjectName(_fromUtf8("label_lm_text_preprocessing_tab"))
+        self.gridLayout.addWidget(self.label_lm_text_preprocessing_tab, 3, 1, 1, 1)
+        #btn_lm_text_preprocessing_tab
+        self.btn_lm_text_preprocessing_tab = QtGui.QPushButton(self.groupBox)
+        self.btn_lm_text_preprocessing_tab.setObjectName(_fromUtf8("btn_lm_text_preprocessing_tab"))
+        self.gridLayout.addWidget(self.btn_lm_text_preprocessing_tab, 3, 3, 1, 1)
+        #edit_lm_text_preprocessing_tab
+        self.edit_lm_text_preprocessing_tab = QtGui.QLineEdit(self.groupBox)
+        self.edit_lm_text_preprocessing_tab.setReadOnly(True)
+        self.edit_lm_text_preprocessing_tab.setObjectName(_fromUtf8("edit_lm_text_preprocessing_tab"))
+        self.gridLayout.addWidget(self.edit_lm_text_preprocessing_tab, 3, 2, 1, 1)
+
         #label_output_dir_preprocessing_tab
         self.label_output_dir_preprocessing_tab = QtGui.QLabel(self.groupBox)
         self.label_output_dir_preprocessing_tab.setObjectName(_fromUtf8("label_output_dir_preprocessing_tab"))
-        self.gridLayout.addWidget(self.label_output_dir_preprocessing_tab, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_output_dir_preprocessing_tab, 4, 1, 1, 1)
         #btn_output_dir_preprocessing_tab
         self.btn_output_dir_preprocessing_tab = QtGui.QPushButton(self.groupBox)
         self.btn_output_dir_preprocessing_tab.setObjectName(_fromUtf8("btn_output_dir_preprocessing_tab"))
-        self.gridLayout.addWidget(self.btn_output_dir_preprocessing_tab, 3, 3, 1, 1)
+        self.gridLayout.addWidget(self.btn_output_dir_preprocessing_tab, 4, 3, 1, 1)
         #edit_output_preprocessing_tab
         self.edit_output_preprocessing_tab = QtGui.QLineEdit(self.groupBox)
         self.edit_output_preprocessing_tab.setReadOnly(True)
         self.edit_output_preprocessing_tab.setObjectName(_fromUtf8("edit_output_preprocessing_tab"))
-        self.gridLayout.addWidget(self.edit_output_preprocessing_tab, 3, 2, 1, 1)
+        self.gridLayout.addWidget(self.edit_output_preprocessing_tab, 4, 2, 1, 1)
 
         self.verticalLayout_2.addWidget(self.groupBox)
         splitter = QtGui.QSplitter(self.tab_corpus_preparation)
@@ -656,12 +671,14 @@ class Ui_MainWindow(object):
         self.btnPreProccess.setMinimumSize(QtCore.QSize(120, 30))
         self.btnPreProccess.setFlat(False)
         self.btnPreProccess.setObjectName(_fromUtf8("btnPreProccess"))
-        self.gridLayout.addWidget(self.btnPreProccess, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.btnPreProccess, 5, 1, 1, 1)
 
         self.label_source_preprocessing_tab.setText(_translate("MainWindow", "Source text", None))
         self.btn_source_preprocessing_tab.setText(_translate("Dialog", "...", None))
         self.label_target_preprocessing_tab.setText(_translate("MainWindow", "Target text", None))
         self.btn_target_preprocessing_tab.setText(_translate("Dialog", "...", None))
+        self.label_lm_text_preprocessing_tab.setText(_translate("MainWindow", "Language Model", None))
+        self.btn_lm_text_preprocessing_tab.setText(_translate("Dialog", "...", None))
         self.label_output_dir_preprocessing_tab.setText(_translate("MainWindow", "Output Directory", None))
         self.btn_output_dir_preprocessing_tab.setText(_translate("Dialog", "...", None))
         self.btnPreProccess.setText(_translate("MainWindow", "Start corpus preprocessing", None))
