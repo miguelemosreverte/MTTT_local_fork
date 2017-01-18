@@ -90,15 +90,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnMachineTranslation_clicked(self):
         import textwrap
         source = self.edit_source_machine_translation_tab.text()
-        target = self.edit_target_machine_translation_tab.text()
 
         if not source:
             doAlert("Please choose a source text first.")
             return
-        if not target:
-            doAlert("Please choose a target text first.")
-            return
-        text = self.migrated_backend_main._machine_translation(source,target)
+        text = self.migrated_backend_main._machine_translation(source)
         self.results_machine_translation.setText(text)
 
 
@@ -484,18 +480,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_source_machine_translation_tab.setText(dialog.selectedFiles()[0])
-
-    @pyqtSignature("")
-    def on_btn_target_machine_translation_tab_clicked(self):
-        """
-        Slot documentation goes here.
-        """
-        dialog = QFileDialog(self)
-        dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setNameFilter("Choose a text source (*.*)")
-        dialog.setViewMode(QFileDialog.Detail)
-        if dialog.exec_():
-            self.edit_target_machine_translation_tab.setText(dialog.selectedFiles()[0])
 
     @pyqtSignature("")
     def on_btn_source_post_editing_clicked(self):
