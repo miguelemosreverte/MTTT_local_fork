@@ -257,7 +257,9 @@ class MyWindow():
 
     def _train(self):
         # print "==============================>", self.is_corpus_preparation_ready
+        print self.output_text
         output_directory = adapt_path_for_cygwin(self.is_windows, self.output_text)
+        return_text = ""
         if output_directory is not None and self.is_corpus_preparation_ready:
             cmds = []
             output = "Log:\n\n"
@@ -298,6 +300,7 @@ class MyWindow():
                 # use Popen for non-blocking
                 print cmd
                 output += cmd
+                return_text += cmd + "\n"
                 proc = subprocess.Popen([cmd],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE,
@@ -321,6 +324,7 @@ class MyWindow():
         else:
             output = "ERROR: Please go to the first tab and complete the process."
             return output
+        return return_text
 
     def _machine_translation(self, mt_in, mt_out):
         mt_in = str(mt_in)
