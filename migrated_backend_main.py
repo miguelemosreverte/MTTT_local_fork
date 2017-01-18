@@ -326,9 +326,10 @@ class MyWindow():
             return output
         return return_text
 
-    def _machine_translation(self, mt_in, mt_out):
+    def _machine_translation(self, mt_in):
         mt_in = str(mt_in)
-        mt_out= str(mt_out)
+        base=os.path.basename(mt_in)
+        mt_out = os.path.dirname(mt_in) +  os.path.splitext(base)[0] + "_translated" + os.path.splitext(base)[1]
         in_file = adapt_path_for_cygwin(self.is_windows, mt_in)
         out_file = adapt_path_for_cygwin(self.is_windows,mt_out)
         output = "Running decoder....\n\n"
