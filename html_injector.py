@@ -17,7 +17,6 @@ def combine_and_save_to_html(filename):
     text_file.write(content)
     text_file.write(footer)
     text_file.close()
-    print "statistics/generated/" + filename + ".html", "OVERWRITTEN"
 
 def get_template(filepath):
     lines = []
@@ -37,7 +36,10 @@ def add_at(at, to_add, contentHTML):
     return contentHTML
 def save_contentHTML(text):
     text_file = open("statistics/generated/content.html", "w")
-    text_file.write(text.encode('utf-8'))
+    try:
+        text_file.write(text.encode('utf-8'))
+    except:
+        text_file.write(text)
     text_file.close()
 
 def inject_into_html(pie_as_json_string, table_data, table_title, filename):
