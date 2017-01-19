@@ -380,6 +380,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.edit_search_post_editing.hide()
 
     @pyqtSignature("")
+    def on_btn_bilingual_post_edition_clicked(self):
+        if self.btn_bilingual_post_edition.isChecked():
+            self.toggled_bilingual_post_editing = False
+            self.label_source_post_editing.show()
+            self.edit_source_post_editing.show()
+            self.btn_source_post_editing.show()
+        else:
+            self.toggled_bilingual_post_editing = True
+            self.label_source_post_editing.hide()
+            self.edit_source_post_editing.hide()
+            self.btn_source_post_editing.hide()
+
+    @pyqtSignature("")
     def on_btnTraining_clicked(self):
         """
         Slot documentation goes here.

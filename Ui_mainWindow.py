@@ -50,8 +50,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.centralWidget.sizePolicy().hasHeightForWidth())
         self.centralWidget.setSizePolicy(sizePolicy)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
-        self.verticalLayout_3 = QtGui.QVBoxLayout(self.centralWidget)
-        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
+        verticalLayout = QtGui.QVBoxLayout(self.centralWidget)
+        verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.tabWidget = QtGui.QTabWidget(self.centralWidget)
         self.tabWidget.setAutoFillBackground(True)
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_statistics, _fromUtf8(""))
 
 
-        self.verticalLayout_3.addWidget(self.tabWidget)
+        verticalLayout.addWidget(self.tabWidget)
         self.labelInfo = QtGui.QLabel(self.centralWidget)
         self.labelInfo.setTextFormat(QtCore.Qt.AutoText)
         self.labelInfo.setAlignment(
@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
             QtCore.Qt.AlignTrailing |
             QtCore.Qt.AlignVCenter)
         self.labelInfo.setObjectName(_fromUtf8("labelInfo"))
-        self.verticalLayout_3.addWidget(self.labelInfo)
+        verticalLayout.addWidget(self.labelInfo)
         MainWindow.setCentralWidget(self.centralWidget)
 
         self.retranslateUi(MainWindow)
@@ -403,33 +403,42 @@ class Ui_MainWindow(object):
         gridLayout = QtGui.QGridLayout(groupBox)
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
 
-        #label_source_post_editing
-        self.label_source_post_editing = QtGui.QLabel(groupBox)
-        self.label_source_post_editing.setObjectName(_fromUtf8("label_source_post_editing"))
-        gridLayout.addWidget(self.label_source_post_editing, 1, 1, 1, 1)
-        #btn_source_post_editing
-        self.btn_source_post_editing = QtGui.QPushButton(groupBox)
-        self.btn_source_post_editing.setObjectName(_fromUtf8("btn_source_post_editing"))
-        gridLayout.addWidget(self.btn_source_post_editing, 1, 3, 1, 1)
-        #edit_source_post_editing
-        self.edit_source_post_editing = QtGui.QLineEdit(groupBox)
-        self.edit_source_post_editing.setReadOnly(True)
-        self.edit_source_post_editing.setObjectName(_fromUtf8("edit_source_post_editing"))
-        gridLayout.addWidget(self.edit_source_post_editing, 1, 2, 1, 1)
-
         #label_target_post_editing
         self.label_target_post_editing = QtGui.QLabel(groupBox)
         self.label_target_post_editing.setObjectName(_fromUtf8("label_target_post_editing"))
-        gridLayout.addWidget(self.label_target_post_editing, 2, 1, 1, 1)
+        gridLayout.addWidget(self.label_target_post_editing, 1, 1, 1, 1)
         #btn_target_post_editing
         self.btn_target_post_editing = QtGui.QPushButton(groupBox)
         self.btn_target_post_editing.setObjectName(_fromUtf8("btn_target_post_editing"))
-        gridLayout.addWidget(self.btn_target_post_editing, 2, 3, 1, 1)
+        gridLayout.addWidget(self.btn_target_post_editing, 1, 3, 1, 1)
         #edit_target_post_editing
         self.edit_target_post_editing = QtGui.QLineEdit(groupBox)
         self.edit_target_post_editing.setReadOnly(True)
         self.edit_target_post_editing.setObjectName(_fromUtf8("edit_target_post_editing"))
-        gridLayout.addWidget(self.edit_target_post_editing, 2, 2, 1, 1)
+        gridLayout.addWidget(self.edit_target_post_editing, 1, 2, 1, 1)
+        
+        #label_source_post_editing
+        self.label_source_post_editing = QtGui.QLabel(groupBox)
+        self.label_source_post_editing.setObjectName(_fromUtf8("label_source_post_editing"))
+        gridLayout.addWidget(self.label_source_post_editing, 2, 1, 1, 1)
+        self.label_source_post_editing.hide()
+        #btn_source_post_editing
+        self.btn_source_post_editing = QtGui.QPushButton(groupBox)
+        self.btn_source_post_editing.setObjectName(_fromUtf8("btn_source_post_editing"))
+        gridLayout.addWidget(self.btn_source_post_editing, 2, 3, 1, 1)
+        self.btn_source_post_editing.hide()
+        #edit_source_post_editing
+        self.edit_source_post_editing = QtGui.QLineEdit(groupBox)
+        self.edit_source_post_editing.setReadOnly(True)
+        self.edit_source_post_editing.setObjectName(_fromUtf8("edit_source_post_editing"))
+        gridLayout.addWidget(self.edit_source_post_editing, 2, 2, 1, 1)
+        self.edit_source_post_editing.hide()
+
+        self.btn_bilingual_post_edition= QtGui.QCheckBox(groupBox)
+        self.btn_bilingual_post_edition.setEnabled(True)
+        self.btn_bilingual_post_edition.setText("bilingual post-edition")
+        self.btn_bilingual_post_edition.setObjectName(_fromUtf8("btn_bilingual_post_edition"))
+        gridLayout.addWidget(self.btn_bilingual_post_edition, 3, 3, 1, 1)
 
         verticalLayout_2.addWidget(groupBox)
         splitter = QtGui.QSplitter(self.tab_post_editing)
@@ -457,7 +466,7 @@ class Ui_MainWindow(object):
         self.edit_search_post_editing = QtGui.QLineEdit(groupBox)
         self.edit_search_post_editing.setReadOnly(False)
         self.edit_search_post_editing.setObjectName(_fromUtf8("edit_search_post_editing"))
-        gridLayout.addWidget(self.edit_search_post_editing, 5, 3, 1, 1)
+        gridLayout.addWidget(self.edit_search_post_editing, 4, 4, 1, 1)
 
         self.btnSearchPostEditing = QtGui.QPushButton(groupBox)
         self.btnSearchPostEditing.setEnabled(True)
@@ -552,7 +561,7 @@ class Ui_MainWindow(object):
 
         self.label_source_post_editing.setText(_translate("MainWindow", "Source text", None))
         self.btn_source_post_editing.setText(_translate("Dialog", "...", None))
-        self.label_target_post_editing.setText(_translate("MainWindow", "Target text", None))
+        self.label_target_post_editing.setText(_translate("MainWindow", "MT text", None))
         self.btn_target_post_editing.setText(_translate("Dialog", "...", None))
         self.btnSearchPostEditing.setText(_translate("Dialog", "Search", None))
 
