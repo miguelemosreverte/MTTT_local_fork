@@ -49,8 +49,8 @@ class Statistics:
         insertions = []
         deletions = []
         for tag, i1, i2, j1, j2 in s.get_opcodes():
-            if tag == "insert" or tag == "replace":insertions.append((j1,j2))
-            if tag == "delete"or tag == "replace": deletions.append((i1,i2))
+            if tag == "insert":insertions.append((j1,j2))
+            if tag == "delete": deletions.append((i1,i2))
         return (insertions,deletions)
 
     def calculate_insertions_or_deletions_percentajes(self, get_removals_percentaje = True):
