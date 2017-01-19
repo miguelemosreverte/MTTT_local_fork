@@ -292,7 +292,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnSecondStat_clicked(self):
-        print "second stat"
         self.save_using_log()
         self.get_modified_and_unmodified_target()
         unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
