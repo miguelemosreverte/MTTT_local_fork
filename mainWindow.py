@@ -64,6 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
            self.setStyleSheet(QtCore.QVariant(css.readAll()).toString())
         css.close()
 
+
         self.post_editing_data = {}
         self.differences_data = {}
         self.modified_references_indices =  []
@@ -124,17 +125,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
         self.table_post_editing.show()
-        
+
         self.source_text = []
         self.target_text = []
         with open(source) as fp:
                 for line in fp:
+                    line = line.decode("utf-8")
                     #line = unicode(line, 'iso8859-15')
                     if line != '\n':
                        self.source_text.append(textwrap.fill(line,40))
         with open(target) as fp:
                 for line in fp:
                     #line = unicode(line, 'iso8859-15')
+                    line = line.decode("utf-8")
                     if line != '\n':
                        self.target_text.append(textwrap.fill(line,40))
         self.post_editing_data["source"] = self.source_text
@@ -571,9 +574,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnTranslate.setFocus()
 
     def changeQTextEditColor(self, tableItem, color):
-        p = tableItem.palette()
-        p.setColor(tableItem.backgroundRole(), color)
-        tableItem.setPalette(p)
+        tableItem.setStyleSheet('background-color:'+ color.name())
+
 
     def on_tableItemDifferences_selected(self, event, tableItem, x, y):
         pass
@@ -595,7 +597,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
-        self.target_text[row_index] = str(tableItem.toPlainText())
+        self.target_text[row_index] = tableItem.toPlainText()
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 

@@ -34,7 +34,7 @@ class MyTable(QTableWidget):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
                 tableItem.setFixedWidth(250)
-                tableItem.setText(item.decode("utf-8"))
+                tableItem.setText(item)
                 if y == 0: tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
