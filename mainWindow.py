@@ -313,7 +313,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.original_target_path = str(self.edit_target_post_editing.text())
         target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
         text_file = open(str("./saved/" + target_filename), "w")
-        text_file.write('\n'.join(self.target_text))
+        for segment in self.target_text:
+            encoded_segment = segment.encode('utf8')
+            text_file.write(encoded_segment + '\n')
         text_file.close()
         self.save_using_log()
 
@@ -597,7 +599,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
-        self.target_text[row_index] = tableItem.toPlainText()
+        self.target_text[row_index] = str(tableItem.toPlainText().toAscii())
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 
