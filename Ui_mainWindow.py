@@ -416,7 +416,7 @@ class Ui_MainWindow(object):
         self.edit_target_post_editing.setReadOnly(True)
         self.edit_target_post_editing.setObjectName(_fromUtf8("edit_target_post_editing"))
         gridLayout.addWidget(self.edit_target_post_editing, 1, 2, 1, 1)
-        
+
         #label_source_post_editing
         self.label_source_post_editing = QtGui.QLabel(groupBox)
         self.label_source_post_editing.setObjectName(_fromUtf8("label_source_post_editing"))
@@ -449,14 +449,14 @@ class Ui_MainWindow(object):
         splitter2.setOrientation(QtCore.Qt.Vertical)
         splitter2.setObjectName(_fromUtf8("splitter2"))
 
-        self.table_post_editing= MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,2)
+        self.table_post_editing= MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,3)
         splitter.addWidget(self.table_post_editing)
         verticalLayout_2.addWidget(splitter)
         verticalLayout_2.setStretch(1, 8)
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,10,1)
+        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,3)
         splitter.addWidget(self.search_table_post_editing)
         verticalLayout_2.addWidget(splitter2)
         verticalLayout_2.setStretch(1, 8)

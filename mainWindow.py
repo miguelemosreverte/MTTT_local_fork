@@ -117,7 +117,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         import textwrap
         source = self.edit_source_post_editing.text()
         target = self.edit_target_post_editing.text()
-        if not source:
+        if not source and self.btn_bilingual_post_edition.isChecked():
             doAlert("Please choose a source text first.")
             return
         if not target:
@@ -128,12 +128,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.source_text = []
         self.target_text = []
-        with open(source) as fp:
-                for line in fp:
-                    line = line.decode("utf-8")
-                    #line = unicode(line, 'iso8859-15')
-                    if line != '\n':
-                       self.source_text.append(textwrap.fill(line,40))
+        if self.btn_bilingual_post_edition.isChecked():
+
+            with open(source) as fp:
+                    for line in fp:
+                        line = line.decode("utf-8")
+                        #line = unicode(line, 'iso8859-15')
+                        if line != '\n':
+                           self.source_text.append(textwrap.fill(line,40))
         with open(target) as fp:
                 for line in fp:
                     #line = unicode(line, 'iso8859-15')
@@ -144,6 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.post_editing_data["target"] = self.target_text
         self.table_offset_PostEdition = 0
         self.table_offset_Differences = 0
+
         self.update_table_PostEdition()
         self.btnNextPostEditing.show()
         self.btnBackPostEditing.show()
@@ -161,7 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         end = self.table_offset_PostEdition + 10
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
-        self.table_post_editing.setdata(self.post_editing_data)
+        self.table_post_editing.setdata(self.post_editing_data, self.btn_bilingual_post_edition.isChecked())
 
 
     def update_table_Differences(self):
