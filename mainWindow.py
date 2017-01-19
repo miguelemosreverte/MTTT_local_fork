@@ -321,7 +321,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def encode_array_to_utf8(self, array):
         encoded_segments = []
         for segment in array:
-            encoded_segments.append(segment.encode('utf-8'))
+            encoded_segments.append(segment.encode('utf-8').strip())
         return encoded_segments
 
     def save(self):
