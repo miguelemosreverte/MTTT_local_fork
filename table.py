@@ -13,8 +13,6 @@ class MyTable(QTableWidget):
         self.data = data
         self.setmydata()
         self.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        self.resizeColumnsToContents()
-        self.resizeRowsToContents()
 
     def setmydata(self):
         horHeaders = []
@@ -68,9 +66,9 @@ class MyTable(QTableWidget):
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
+
     def setdata(self, data, bilingual = False):
         self.clear()
-        print data.keys()
         if bilingual: self.create_bilingual_table(data)
         else: self.create_monolingual_table(data)
 

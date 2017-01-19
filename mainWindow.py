@@ -161,19 +161,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def update_table_PostEdition(self):
         start = self.table_offset_PostEdition
-        end = self.table_offset_PostEdition + 10
+        end = self.table_offset_PostEdition + 5
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
         self.table_post_editing.setdata(self.post_editing_data, self.btn_bilingual_post_edition.isChecked())
 
+        for y in  self.modified_references_indices:
+            y -= start
+            if y >= 0 and y < 5:
+                self.changeQTextEditColor(self.table_post_editing.cellWidget(y,1), QColor( 51, 255, 153,255))
+
 
     def update_table_Differences(self):
-        '''
-        start = self.table_offset_Differences
-        end = self.table_offset_Differences + 10
-        source_to_show = self.source_text[start:end]
-        target_to_show = self.target_text[start:end]
-        '''
 
 
         self.differences_data["source"] = self.enriched_target_text_original
@@ -610,8 +609,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
     def on_tableItemPostEdition_selected(self, event, tableItem, x, y):
-        if self.last_changed_item_in_post_edition is not None and self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates:
-            self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
+        try:
+            if self.last_changed_item_in_post_edition is not None and self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates:
+                self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
+        except: pass
         self.last_changed_item_in_post_edition = tableItem
         self.last_changed_item_in_post_editionCoordinates = (x,y)
         self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 153, 255, 255,255))
