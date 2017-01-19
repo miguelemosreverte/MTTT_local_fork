@@ -259,7 +259,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         last_modifications = {}
         for a in sorted(log.keys()):
             for b in log[a]:
-                last_modifications[b] = log[a][b]
+                last_modifications[b] = log[a][b].decode('utf-8')
         return last_modifications
 
     def get_modified_and_unmodified_target(self):
@@ -268,6 +268,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open(self.original_target_path) as fp:
             for line in fp:
                 if line != '\n':
+                    line = line.decode('utf-8')
                     self.unmodified_target.append(line)
         latest_modifications = self.get_latest_modifications()
         for index, line in enumerate(self.unmodified_target):
@@ -280,20 +281,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnFirstStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
+        modified_target = self.encode_array_to_utf8(self.modified_target)
+        self.statistics = Statistics(unmodified_target, modified_target)
         self.statistics.calculate_statistics("time_per_segment")
-        self.HTMLview.setUrl(QUrl("Statistics/generated/time_per_segment.html"));
+        self.HTMLview.setUrl(QUrl("statistics/generated/time_per_segment.html"));
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(6,True)
         self.tabWidget.setCurrentIndex(6)
 
     @pyqtSignature("")
     def on_btnSecondStat_clicked(self):
+        print "second stat"
         self.save_using_log()
         self.get_modified_and_unmodified_target()
+        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
+        modified_target = self.encode_array_to_utf8(self.modified_target)
         self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("insertions")
-        self.HTMLview.setUrl(QUrl("Statistics/generated/insertions.html"));
+        self.HTMLview.setUrl(QUrl("statistics/generated/insertions.html"));
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(6,True)
         self.tabWidget.setCurrentIndex(6)
@@ -302,20 +308,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnThirdStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
+        modified_target = self.encode_array_to_utf8(self.modified_target)
+        self.statistics = Statistics(unmodified_target, modified_target)
         self.statistics.calculate_statistics("deletions")
-        self.HTMLview.setUrl(QUrl("Statistics/generated/deletions.html"));
+        self.HTMLview.setUrl(QUrl("statistics/generated/deletions.html"));
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(6,True)
         self.tabWidget.setCurrentIndex(6)
+
+    def encode_array_to_utf8(self, array):
+        encoded_segments = []
+        for segment in array:
+            encoded_segments.append(segment.encode('utf-8'))
+        return encoded_segments
 
     def save(self):
         self.original_target_path = str(self.edit_target_post_editing.text())
         target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
         text_file = open(str("./saved/" + target_filename), "w")
-        for segment in self.target_text:
-            encoded_segment = segment.encode('utf8')
-            text_file.write(encoded_segment + '\n')
+        text_file.write('\n'.join(self.encode_array_to_utf8(self.target_text)))
         text_file.close()
         self.save_using_log()
 
@@ -605,7 +617,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def save_using_log(self):
         for modified_reference_index in self.modified_references_indices:
-            modified_segment = self.target_text[modified_reference_index]
+            modified_segment = self.target_text[modified_reference_index].encode('utf-8')
             self.saved_modified_references.append(modified_segment)
             if self.last_change_timestamp not in self.log:
                 self.log[self.last_change_timestamp] = {}

@@ -37,7 +37,7 @@ def add_at(at, to_add, contentHTML):
     return contentHTML
 def save_contentHTML(text):
     text_file = open("statistics/generated/content.html", "w")
-    text_file.write(text)
+    text_file.write(text.encode('utf-8'))
     text_file.close()
 
 def inject_into_html(pie_as_json_string, table_data, table_title, filename):
