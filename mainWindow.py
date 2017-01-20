@@ -165,7 +165,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         end = self.table_offset_PostEdition + 5
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
-        self.table_post_editing.setdata(self.post_editing_data, self.btn_bilingual_post_edition.isChecked())
+        self.table_post_editing.set_post_editing_table_data(self.post_editing_data, self.btn_bilingual_post_edition.isChecked())
 
         for y in  self.modified_references_indices:
             y -= start
@@ -174,11 +174,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def update_table_Differences(self):
-
-
         self.differences_data["source"] = self.enriched_target_text_original
         self.differences_data["target"] = self.enriched_target_text_modified
-        self.table_differences.setdata(self.differences_data)
+        self.table_differences.set_differences_table_data(self.differences_data)
 
     def search_on_table_differences(self, text):
         self.search_table_differences.clear()
@@ -236,8 +234,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setTabEnabled(5,True)
         self.tabWidget.setCurrentIndex(5)
         self.get_modified_and_unmodified_target()
-        if self.differences is None:
-            self.differences = Differences(self.unmodified_target, self.modified_target)
+        self.differences = Differences(self.unmodified_target, self.modified_target)
         self.enriched_target_text_original,self.enriched_target_text_modified = self.differences.get_enriched_text()
         self.showDiffs()
 
