@@ -29,6 +29,7 @@ import sys
 import time
 import threading
 import shutil
+import codecs
 
 from Ui_mainWindow import Ui_MainWindow
 from addMTModel import AddMTModelDialog
@@ -261,7 +262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         last_modifications = {}
         for a in sorted(log.keys()):
             for b in log[a]:
-                last_modifications[b] = log[a][b].decode('utf-8')
+                last_modifications[b] = log[a][b]
         return last_modifications
 
     def get_modified_and_unmodified_target(self):
@@ -283,9 +284,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnFirstStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
-        modified_target = self.encode_array_to_utf8(self.modified_target)
-        self.statistics = Statistics(unmodified_target, modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("time_per_segment")
         self.HTMLview.setUrl(QUrl("statistics/generated/time_per_segment.html"));
         self.HTMLview.show()
@@ -296,8 +295,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnSecondStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
-        modified_target = self.encode_array_to_utf8(self.modified_target)
         self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("insertions")
         self.HTMLview.setUrl(QUrl("statistics/generated/insertions.html"));
@@ -309,27 +306,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnThirdStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        unmodified_target = self.encode_array_to_utf8(self.unmodified_target)
-        modified_target = self.encode_array_to_utf8(self.modified_target)
-        self.statistics = Statistics(unmodified_target, modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target)
         self.statistics.calculate_statistics("deletions")
         self.HTMLview.setUrl(QUrl("statistics/generated/deletions.html"));
         self.HTMLview.show()
         self.tabWidget.setTabEnabled(6,True)
         self.tabWidget.setCurrentIndex(6)
 
-    def encode_array_to_utf8(self, array):
-        encoded_segments = []
-        for segment in array:
-            encoded_segments.append(segment.encode('utf-8').strip())
-        return encoded_segments
-
     def save(self):
         self.original_target_path = str(self.edit_target_post_editing.text())
         target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
-        text_file = open(str("./saved/" + target_filename), "w")
-        text_file.write('\n'.join(self.encode_array_to_utf8(self.target_text)))
-        text_file.close()
+
+        unmodified_target = self.edit_target_post_editing.text()
+        shutil.copy2(unmodified_target, str("./saved/" + target_filename))
         self.save_using_log()
 
     @pyqtSignature("")
@@ -627,13 +616,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
-        self.target_text[row_index] = str(tableItem.toPlainText().toAscii())
+        self.target_text[row_index] = str(tableItem.toPlainText().toUtf8())
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 
     def save_using_log(self):
         for modified_reference_index in self.modified_references_indices:
-            modified_segment = self.target_text[modified_reference_index].encode('utf-8')
+            modified_segment = self.target_text[modified_reference_index]
             self.saved_modified_references.append(modified_segment)
             if self.last_change_timestamp not in self.log:
                 self.log[self.last_change_timestamp] = {}

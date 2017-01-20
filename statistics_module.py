@@ -32,7 +32,6 @@ class Statistics:
             for current_timestamp,next_timestamp in pairwise(sorted(my_source_log.keys())):
                 #for current_timestamp,next_timestamp in sorted(self.source_log.keys()):
                 delta = (int(next_timestamp) - int(current_timestamp))/1000
-                print delta, delta + 1000
                 delta += 1000
                 for segment_index in my_source_log[current_timestamp]:
                     if segment_index in seconds_spent_by_segment:
@@ -154,7 +153,6 @@ class Statistics:
     def calculate_statistics(self, statistics_name):
         with open("./saved/log.json") as json_data:
             self.log = json.load(json_data)
-        print self.log
 
         pie_as_json_string = ""
         if statistics_name == "time_per_segment":
