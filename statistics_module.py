@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import time
 import os
 import itertools
 import urlparse
@@ -13,8 +13,43 @@ class Statistics:
     def __init__(self, source, target):
         self.source_text = source
         self.target_text = target
-
     def calculate_time_per_segment(self):
+            seconds_spent_by_segment = {}
+            percentaje_spent_by_segment = {}
+            total_time_spent = 0
+            #again with the closure, lets see how it plays out.
+            def pairwise(iterable):
+                a, b = itertools.tee(iterable)
+                next(b, None)
+                return itertools.izip(a, b)
+
+            now = int(time.time()*1000)
+            myList = sorted(self.log.keys())
+            my_source_log = self.log
+            my_source_log[now] = self.log[myList[-1]]
+
+            #calculate time spent by segment
+            for current_timestamp,next_timestamp in pairwise(sorted(my_source_log.keys())):
+                #for current_timestamp,next_timestamp in sorted(self.source_log.keys()):
+                delta = (int(next_timestamp) - int(current_timestamp))/1000
+                print delta, delta + 1000
+                delta += 1000
+                for segment_index in my_source_log[current_timestamp]:
+                    if segment_index in seconds_spent_by_segment:
+                        seconds_spent_by_segment[segment_index] += delta
+                    else:
+                        seconds_spent_by_segment[segment_index] = delta
+            #calculate total time spent
+            for a in seconds_spent_by_segment:
+                total_time_spent += seconds_spent_by_segment[a]
+            #calculate percentajes
+            for a in seconds_spent_by_segment:
+                percentaje_spent_by_segment[a] = float(seconds_spent_by_segment[a]) *100 / float(max(1,total_time_spent))
+
+
+            title = "<th>Segment </th><th>" + '%'+ " of the time spent </th>"
+            return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
+    def calculate_time_per_segmentv2(self):
         seconds_spent_by_segment = {}
         percentaje_spent_by_segment = {}
         total_time_spent = 0
