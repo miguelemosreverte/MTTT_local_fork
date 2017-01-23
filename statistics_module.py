@@ -79,7 +79,7 @@ class Statistics:
         return self.build_pie_as_json_string(percentaje_spent_by_segment),self.build_table(percentaje_spent_by_segment),title
 
     def get_insertion_and_deletions(self, original, modified):
-        s = difflib.SequenceMatcher(None, original, modified)
+        s = difflib.SequenceMatcher(None, original.strip(), modified.strip())
         insertions = []
         deletions = []
         for tag, i1, i2, j1, j2 in s.get_opcodes():
