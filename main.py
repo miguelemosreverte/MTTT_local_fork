@@ -6,7 +6,6 @@ import os
 import sys
 
 from mainWindow import MainWindow
-from datamodel import DataModel
 
 if __name__ == "__main__":
 
