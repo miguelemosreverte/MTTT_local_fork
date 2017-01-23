@@ -32,9 +32,6 @@ import shutil
 import codecs
 
 from Ui_mainWindow import Ui_MainWindow
-from addMTModel import AddMTModelDialog
-from chooseMTModel import ChooseMTModelDialog
-from engine import Engine
 from credits import DlgCredits
 from util import doAlert
 
@@ -53,7 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def setupUi(self, mainWindow):
         super(MainWindow, self).setupUi(mainWindow)
 
-    def __init__(self, parent=None,  dm=None, moses=None, workdir=None):
+    def __init__(self, parent=None, moses=None, workdir=None):
         """
         Constructor
         """
@@ -81,7 +78,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         os.makedirs("./statistics/generated")
         shutil.rmtree("./saved", ignore_errors=True)
         os.makedirs("./saved")
-        self.datamodel = dm
         self.engine = None
         self.progress = None
         self.workdir = workdir
