@@ -97,7 +97,7 @@ class MyTable(QTableWidget):
 
 def main(args):
     app = QApplication(args)
-    table = MyTable(data, 5, 3)
+    table = MyTable(data, 5, 1)
     table.show()
     sys.exit(app.exec_())
 

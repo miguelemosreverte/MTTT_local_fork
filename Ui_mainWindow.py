@@ -449,7 +449,7 @@ class Ui_MainWindow(object):
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,3)
+        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,1)
         splitter.addWidget(self.search_table_post_editing)
         verticalLayout_2.addWidget(splitter2)
         verticalLayout_2.setStretch(1, 8)
@@ -459,7 +459,7 @@ class Ui_MainWindow(object):
         self.edit_search_post_editing = QtGui.QLineEdit(groupBox)
         self.edit_search_post_editing.setReadOnly(False)
         self.edit_search_post_editing.setObjectName(_fromUtf8("edit_search_post_editing"))
-        gridLayout.addWidget(self.edit_search_post_editing, 4, 4, 1, 1)
+        gridLayout.addWidget(self.edit_search_post_editing, 5, 3, 1, 2)
 
         self.btnSearchPostEditing = QtGui.QPushButton(groupBox)
         self.btnSearchPostEditing.setEnabled(True)

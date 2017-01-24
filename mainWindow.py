@@ -153,7 +153,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
-        print "Searching in postedition"
         self.search_on_table_post_editing(text)
 
     def update_table_PostEdition(self):
@@ -203,7 +202,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.search_buttons = []
         if self.target_text:
             column = 1
-            print "got int"
             for index,segment in enumerate(self.target_text):
                 row = index
                 if text and text in segment:
