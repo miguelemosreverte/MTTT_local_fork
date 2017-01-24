@@ -148,10 +148,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("QString")
     def on_edit_search_differences_textEdited(self,text):
+        print "Searching in diff"
         self.search_on_table_differences(text)
 
     @pyqtSignature("QString")
     def on_edit_search_post_editing_textEdited(self,text):
+        print "Searching in postedition"
         self.search_on_table_post_editing(text)
 
     def update_table_PostEdition(self):
@@ -173,8 +175,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.changeQTextEditColor(self.table_post_editing.cellWidget(row_index,2), QColor( 51, 255, 153,255))
 
     def update_table_Differences(self):
-        self.differences_data["source"] = self.enriched_target_text_original
-        self.differences_data["target"] = self.enriched_target_text_modified
+        start = self.table_offset_Differences
+        end = self.table_offset_Differences + 5
+        self.differences_data["source"] = self.enriched_target_text_original[start:end]
+        self.differences_data["target"] = self.enriched_target_text_modified[start:end]
         self.table_differences.set_differences_table_data(self.differences_data)
 
     def search_on_table_differences(self, text):
@@ -197,9 +201,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.search_table_post_editing.clear()
         text = str(text)
         self.search_buttons = []
-        if self.post_editing_data["target"] and self.post_editing_data["source"]:
+        if self.target_text:
             column = 1
-            for index,segment in enumerate(self.post_editing_data["target"]):
+            print "got int"
+            for index,segment in enumerate(self.target_text):
                 row = index
                 if text and text in segment:
                     self.search_buttons.append(QTextEdit())
@@ -212,20 +217,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def show_selected_segment_from_search_differences(self, event, tableItem, x, y):
-        if self.last_selected_search is not None:
-            self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
-        self.last_selected_search = tableItem
-        self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
-        self.table_differences.scrollToItem(self.table_differences.item(x,y), QAbstractItemView.PositionAtCenter)
-        self.table_differences.selectRow(x)
+        try:
+            if self.last_selected_search is not None:
+                self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
+            self.last_selected_search = tableItem
+            self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
+        except:pass
+        self.table_offset_Differences = x
+        self.update_table_Differences()
+
     @pyqtSignature("")
     def show_selected_segment_from_search_post_editing(self, event, tableItem, x, y):
-        if self.last_selected_search is not None:
-            self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
-        self.last_selected_search = tableItem
-        self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
-        self.table_post_editing.scrollToItem(self.table_post_editing.item(x,y), QAbstractItemView.PositionAtCenter)
-        self.table_post_editing.selectRow(x)
+        try:
+            if self.last_selected_search is not None:
+                self.changeQTextEditColor(self.last_selected_search, QColor( 255, 255, 255,255))
+            self.last_selected_search = tableItem
+            self.changeQTextEditColor(tableItem, QColor( 153, 255, 255,255))
+        except:pass
+        self.table_offset_PostEdition= x
+        self.update_table_PostEdition()
 
     @pyqtSignature("")
     def on_btnDiff_clicked(self):
@@ -587,7 +597,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnTranslate.setFocus()
 
     def changeQTextEditColor(self, tableItem, color):
-        tableItem.setStyleSheet('background-color:'+ color.name())
+        try:
+            tableItem.setStyleSheet('background-color:'+ color.name())
+        except:
+            print "error deleted tableItem", color.name()
 
 
     def on_tableItemDifferences_selected(self, event, tableItem, x, y):
