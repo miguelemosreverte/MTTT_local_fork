@@ -34,16 +34,12 @@ class MyTable(QTableWidget):
             for x, item in enumerate(data[key]):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
-                tableItem.setFixedWidth(250)
                 tableItem.setText(item)
                 if key != "target": tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
                 #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
                 self.setCellWidget(x,y, tableItem)
-
-        self.resizeColumnsToContents()
-        self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
 
     def create_monolingual_table(self,data):
@@ -62,15 +58,19 @@ class MyTable(QTableWidget):
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
                 #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
                 self.setCellWidget(x,y, tableItem)
-
-        self.resizeColumnsToContents()
-        self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
+
 
     def set_post_editing_table_data(self, data, bilingual = False):
         self.clear()
         if bilingual: self.create_bilingual_table(data)
         else: self.create_monolingual_table(data)
+
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
+        self.setColumnHidden(2, not bilingual)
+        self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
+        self.horizontalHeader().setStretchLastSection(True)
 
     def set_differences_table_data(self, data):
         horHeaders = []
@@ -81,17 +81,18 @@ class MyTable(QTableWidget):
             for x, item in enumerate(data[key]):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
-                tableItem.setFixedWidth(250)
+                #tableItem.setFixedWidth(250)
                 tableItem.setText(item)
                 if key != "target": tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
                 tableItem.textChanged.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemChangedCallback(tableItem,x,y))
-                #tableItem.mousePressEvent.connect(lambda tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(tableItem,x,y))
                 self.setCellWidget(x,y, tableItem)
 
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
+        self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
+        self.horizontalHeader().setStretchLastSection(True)
 
     def changeColorOfItem(self,X,Y):
         self.item(X,Y).setBackground(QColor(100,100,150))

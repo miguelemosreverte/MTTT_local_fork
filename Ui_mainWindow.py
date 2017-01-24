@@ -122,17 +122,15 @@ class Ui_MainWindow(object):
         splitter2.setOrientation(QtCore.Qt.Vertical)
         splitter2.setObjectName(_fromUtf8("splitter2"))
 
-        self.table_differences= MyTable({'col1':[], 'col2':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,10,2)
+        self.table_differences= MyTable({'col1':[], 'col2':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,5,2)
         splitter.addWidget(self.table_differences)
         verticalLayout_2.addWidget(splitter)
-        verticalLayout_2.setStretch(1, 8)
         self.tab_differences.setAutoFillBackground(True)
         self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
 
-        self.search_table_differences= MyTable({'Search Results':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,10,1)
+        self.search_table_differences= MyTable({'Search Results':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,5,1)
         splitter.addWidget(self.search_table_differences)
         verticalLayout_2.addWidget(splitter2)
-        verticalLayout_2.setStretch(1, 8)
         self.tab_differences.setAutoFillBackground(True)
         self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
         #edit_target_differences
