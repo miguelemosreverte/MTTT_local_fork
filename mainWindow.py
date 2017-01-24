@@ -164,8 +164,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for y in  self.modified_references_indices:
             y -= start
             if y >= 0 and y < 5:
-                self.changeQTextEditColor(self.table_post_editing.cellWidget(y,1), QColor( 51, 255, 153,255))
+                self.setTableRowGreen(y)
 
+    def setTableRowGreen(self,row_index):
+        self.changeQTextEditColor(self.table_post_editing.cellWidget(row_index,0), QColor( 51, 255, 153,255))
+        self.changeQTextEditColor(self.table_post_editing.cellWidget(row_index,1), QColor( 51, 255, 153,255))
+        if self.btn_bilingual_post_edition.isChecked():
+            self.changeQTextEditColor(self.table_post_editing.cellWidget(row_index,2), QColor( 51, 255, 153,255))
 
     def update_table_Differences(self):
         self.differences_data["source"] = self.enriched_target_text_original
@@ -603,7 +608,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         row_index += self.table_offset_PostEdition
         self.last_change_timestamp = int(time.time() * 1000)
         self.modified_table_items_coordinates.append((row_index,column_index))
-        self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
+        self.setTableRowGreen(row_index)
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
