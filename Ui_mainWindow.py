@@ -110,6 +110,7 @@ class Ui_MainWindow(object):
         groupBox.setObjectName(_fromUtf8("groupBox"))
         gridLayout = QtGui.QGridLayout(groupBox)
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        groupBox.setMaximumSize((QtCore.QSize(600, 60)))
 
 
 
@@ -118,30 +119,16 @@ class Ui_MainWindow(object):
         splitter.setOrientation(QtCore.Qt.Horizontal)
         splitter.setObjectName(_fromUtf8("splitter"))
 
-        splitter2 = QtGui.QSplitter(self.tab_differences)
-        splitter2.setOrientation(QtCore.Qt.Vertical)
-        splitter2.setObjectName(_fromUtf8("splitter2"))
-
         self.table_differences= MyTable({'col1':[], 'col2':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,5,2)
         splitter.addWidget(self.table_differences)
         verticalLayout_2.addWidget(splitter)
-        self.tab_differences.setAutoFillBackground(True)
-        self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
 
         self.search_table_differences= MyTable({'Search Results':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,5,1)
         splitter.addWidget(self.search_table_differences)
-        verticalLayout_2.addWidget(splitter2)
-        self.tab_differences.setAutoFillBackground(True)
-        self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
-        #edit_target_differences
-        self.edit_search_differences = QtGui.QLineEdit(groupBox)
-        self.edit_search_differences.setReadOnly(False)
-        self.edit_search_differences.setObjectName(_fromUtf8("edit_search_differences"))
-        gridLayout.addWidget(self.edit_search_differences, 5, 3, 1, 1)
 
         self.btnBackDifferences = QtGui.QPushButton(groupBox)
         self.btnBackDifferences.setEnabled(True)
-        self.btnBackDifferences.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnBackDifferences.setMaximumSize(QtCore.QSize(100, 30))
         self.btnBackDifferences.setFlat(False)
         self.btnBackDifferences.setText(_translate("Dialog", "Back", None))
         self.btnBackDifferences.setObjectName(_fromUtf8("btnBackDifferences"))
@@ -150,7 +137,7 @@ class Ui_MainWindow(object):
 
         self.btnNextDifferences = QtGui.QPushButton(groupBox)
         self.btnNextDifferences.setEnabled(True)
-        self.btnNextDifferences.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnNextDifferences.setMaximumSize(QtCore.QSize(100, 30))
         self.btnNextDifferences.setFlat(False)
         self.btnNextDifferences.setText(_translate("Dialog", "Next", None))
         self.btnNextDifferences.setObjectName(_fromUtf8("btnNextDifferences"))
@@ -161,12 +148,20 @@ class Ui_MainWindow(object):
         self.btnSearchDifferences.setEnabled(True)
         self.btnSearchDifferences.setFlat(False)
         self.btnSearchDifferences.setObjectName(_fromUtf8("btnSearchDifferences"))
+        self.btnSearchDifferences.setMaximumSize((QtCore.QSize(100, 30)))
+        self.btnSearchDifferences.setText(_translate("Dialog", "Search", None))
         gridLayout.addWidget(self.btnSearchDifferences, 1, 3, 1, 1)
+
+        #edit_target_differences
+        self.edit_search_differences = QtGui.QLineEdit(groupBox)
+        self.edit_search_differences.setReadOnly(False)
+        self.edit_search_differences.setObjectName(_fromUtf8("edit_search_differences"))
+        gridLayout.addWidget(self.edit_search_differences, 1, 4, 1, 1)
+
         self.toggled_search_differences = True
         self.search_table_differences.hide()
         self.edit_search_differences.hide()
 
-        self.btnSearchDifferences.setText(_translate("Dialog", "Search", None))
 
     def initialize_tab_statistics(self):
         self.tab_statistics = QtGui.QWidget()
