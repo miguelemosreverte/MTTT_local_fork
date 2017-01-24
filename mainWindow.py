@@ -130,15 +130,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             with open(source) as fp:
                     for line in fp:
                         line = line.decode("utf-8")
-                        #line = unicode(line, 'iso8859-15')
                         if line != '\n':
-                           self.source_text.append(textwrap.fill(line,40))
+                           self.source_text.append(line)
         with open(target) as fp:
                 for line in fp:
-                    #line = unicode(line, 'iso8859-15')
                     line = line.decode("utf-8")
                     if line != '\n':
-                       self.target_text.append(textwrap.fill(line,40))
+                       self.target_text.append(line)
         self.post_editing_data["source"] = self.source_text
         self.post_editing_data["target"] = self.target_text
         self.table_offset_PostEdition = 0
@@ -609,7 +607,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnStats.show()
         self.btnDiff.show()
         self.btnSave.show()
-        self.target_text[row_index] = str(tableItem.toPlainText().toUtf8())
+        self.target_text[row_index] = (str(tableItem.toPlainText().toUtf8())).decode('utf8')
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 

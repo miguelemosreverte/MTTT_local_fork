@@ -51,7 +51,6 @@ class MyTable(QTableWidget):
             for x, item in enumerate(data["target"]):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
-                tableItem.setFixedWidth(250)
                 tableItem.setText(item)
                 if y == 0: tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
@@ -81,7 +80,6 @@ class MyTable(QTableWidget):
             for x, item in enumerate(data[key]):
                 #newitem = QTableWidgetItem(item)
                 tableItem = QTextEdit()
-                #tableItem.setFixedWidth(250)
                 tableItem.setText(item)
                 if key != "target": tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
