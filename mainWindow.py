@@ -604,13 +604,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
     def on_tableItemPostEdition_selected(self, event, tableItem, x, y):
-        if hasattr(self,'modified_table_items_coordinates'):
-            try:
-                if (self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates):
-                    self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
-                else:
-                    self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
-            except: pass
+        try:
+            if (self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates):
+                self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
+            else:
+                self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
+        except: pass
         self.last_changed_item_in_post_edition = tableItem
         self.last_changed_item_in_post_editionCoordinates = (x,y)
         self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 153, 255, 255,255))
