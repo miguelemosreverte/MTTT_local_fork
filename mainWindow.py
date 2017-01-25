@@ -597,18 +597,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def changeQTextEditColor(self, tableItem, color):
         try:
             tableItem.setStyleSheet('background-color:'+ color.name())
-        except:
-            print "error deleted tableItem", color.name()
+        except: pass
 
 
     def on_tableItemDifferences_selected(self, event, tableItem, x, y):
         pass
 
     def on_tableItemPostEdition_selected(self, event, tableItem, x, y):
-        try:
-            if self.last_changed_item_in_post_edition is not None and self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates:
-                self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
-        except: pass
+        if hasattr(self,'modified_table_items_coordinates'):
+            try:
+                if (self.last_changed_item_in_post_editionCoordinates not in self.modified_table_items_coordinates):
+                    self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 255, 255, 255,255))
+                else:
+                    self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 51, 255, 153,255))
+            except: pass
         self.last_changed_item_in_post_edition = tableItem
         self.last_changed_item_in_post_editionCoordinates = (x,y)
         self.changeQTextEditColor(self.last_changed_item_in_post_edition, QColor( 153, 255, 255,255))
@@ -618,7 +620,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_tableItemPostEditing_textChanged(self, tableItem, row_index,column_index):
         row_index += self.table_offset_PostEdition
         self.last_change_timestamp = int(time.time() * 1000)
-        self.modified_table_items_coordinates.append((row_index,column_index))
+        self.modified_table_items_coordinates.append((row_index,0))
+        self.modified_table_items_coordinates.append((row_index,1))
+        self.modified_table_items_coordinates.append((row_index,2))
         self.setTableRowGreen(row_index)
         self.btnStats.show()
         self.btnDiff.show()
