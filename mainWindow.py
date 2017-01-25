@@ -436,7 +436,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         target = self.edit_target_preprocessing_tab.text()
         lm_text = self.edit_lm_text_preprocessing_tab.text()
         output = self.edit_output_preprocessing_tab.text()
-        source_language = self.preprocessing_target_language
+        source_language = self.preprocessing_source_language
         target_language = self.preprocessing_target_language
 
         if not source:
