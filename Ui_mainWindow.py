@@ -503,7 +503,7 @@ class Ui_MainWindow(object):
         self.btnSave.setFlat(False)
         self.btnSave.setText(_translate("Dialog", "Save", None))
         self.btnSave.setObjectName(_fromUtf8("btnSave"))
-        gridLayout.addWidget(self.btnSave, 1, 4, 1, 1)
+        gridLayout.addWidget(self.btnSave, 4, 4, 1, 1)
         self.btnSave.hide()
 
         self.btnDiff = QtGui.QPushButton(groupBox)
@@ -512,7 +512,7 @@ class Ui_MainWindow(object):
         self.btnDiff.setFlat(False)
         self.btnDiff.setText(_translate("Dialog", "See changes", None))
         self.btnDiff.setObjectName(_fromUtf8("btnDiff"))
-        gridLayout.addWidget(self.btnDiff, 2, 4, 1, 1)
+        gridLayout.addWidget(self.btnDiff, 1, 4, 1, 1)
         self.btnDiff.hide()
 
         self.btnStats = QtGui.QPushButton(groupBox)
@@ -521,7 +521,7 @@ class Ui_MainWindow(object):
         self.btnStats.setFlat(False)
         self.btnStats.setText(_translate("Dialog", "See stats", None))
         self.btnStats.setObjectName(_fromUtf8("btnStats"))
-        gridLayout.addWidget(self.btnStats, 4, 4, 1, 1)
+        gridLayout.addWidget(self.btnStats, 1, 5, 1, 1)
         self.btnStats.hide()
 
 
@@ -531,7 +531,7 @@ class Ui_MainWindow(object):
         self.btnFirstStat.setFlat(False)
         self.btnFirstStat.setText(_translate("Dialog", "Time per Segment", None))
         self.btnFirstStat.setObjectName(_fromUtf8("btnFirstStat"))
-        gridLayout.addWidget(self.btnFirstStat, 1, 5, 1, 1)
+        gridLayout.addWidget(self.btnFirstStat, 3, 5, 1, 1)
         self.btnFirstStat.hide()
 
         self.btnSecondStat = QtGui.QPushButton(groupBox)
@@ -540,7 +540,7 @@ class Ui_MainWindow(object):
         self.btnSecondStat.setFlat(False)
         self.btnSecondStat.setText(_translate("Dialog", "Insertions", None))
         self.btnSecondStat.setObjectName(_fromUtf8("btnSecondStat"))
-        gridLayout.addWidget(self.btnSecondStat, 2, 5, 1, 1)
+        gridLayout.addWidget(self.btnSecondStat, 4, 5, 1, 1)
         self.btnSecondStat.hide()
 
         self.btnThirdStat = QtGui.QPushButton(groupBox)
@@ -549,7 +549,7 @@ class Ui_MainWindow(object):
         self.btnThirdStat.setFlat(False)
         self.btnThirdStat.setText(_translate("Dialog", "Deletions", None))
         self.btnThirdStat.setObjectName(_fromUtf8("btnThirdStat"))
-        gridLayout.addWidget(self.btnThirdStat, 4, 5, 1, 1)
+        gridLayout.addWidget(self.btnThirdStat, 5, 5, 1, 1)
         self.btnThirdStat.hide()
 
         self.label_source_post_editing.setText(_translate("MainWindow", "Source text", None))

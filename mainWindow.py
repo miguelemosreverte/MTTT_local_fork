@@ -248,9 +248,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSignature("")
     def on_btnStats_clicked(self):
         self.save();
-        self.btnFirstStat.show()
-        self.btnSecondStat.show()
-        self.btnThirdStat.show()
+        if not (hasattr(self,'toggled_statistics_menu')):
+            self.toggled_statistics_menu = True
+        else: self.toggled_statistics_menu = not self.toggled_statistics_menu
+        if self.toggled_statistics_menu:
+            self.btnFirstStat.show()
+            self.btnSecondStat.show()
+            self.btnThirdStat.show()
+        else:
+            self.btnFirstStat.hide()
+            self.btnSecondStat.hide()
+            self.btnThirdStat.hide()
 
     def load_log(self):
         log = {}
