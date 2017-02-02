@@ -102,11 +102,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_table_Differences()
         self.btnNextDifferences.show()
         self.btnBackDifferences.show()
+        self.btnAddRowsDifferences.show()
+        self.btnLessRowsDifferences.show()
     def showDiffs(self):
         self.table_offset_Differences = 0
         self.update_table_Differences()
         self.btnNextDifferences.show()
         self.btnBackDifferences.show()
+        self.btnAddRowsDifferences.show()
+        self.btnLessRowsDifferences.show()
         self.table_differences.show()
 
     @pyqtSignature("")
@@ -143,12 +147,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_offset_Differences = 0
 
         self.update_table_PostEdition()
-        self.btnNextPostEditing.show()
-        self.btnBackPostEditing.show()
+        self.PE_table_controls_groupBox.show()
 
     @pyqtSignature("QString")
     def on_edit_search_differences_textEdited(self,text):
-        print "Searching in diff"
         self.search_on_table_differences(text)
 
     @pyqtSignature("QString")

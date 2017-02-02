@@ -12,7 +12,8 @@ class MyTable(QTableWidget):
         self.setAutoFillBackground(True)
         self.data = data
         self.setmydata()
-        self.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.setEditTriggers(QAbstractItemView.AllEditTriggers)        
+        self.horizontalHeader().setStretchLastSection(True)
 
     def setmydata(self):
         horHeaders = []
@@ -69,7 +70,6 @@ class MyTable(QTableWidget):
         self.resizeRowsToContents()
         self.setColumnHidden(2, not bilingual)
         self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
-        self.horizontalHeader().setStretchLastSection(True)
 
     def set_differences_table_data(self, data):
         horHeaders = []
@@ -90,7 +90,6 @@ class MyTable(QTableWidget):
         self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
         self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
-        self.horizontalHeader().setStretchLastSection(True)
 
     def changeColorOfItem(self,X,Y):
         self.item(X,Y).setBackground(QColor(100,100,150))

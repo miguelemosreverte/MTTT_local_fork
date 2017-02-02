@@ -104,17 +104,25 @@ class Ui_MainWindow(object):
         self.tab_differences.setAutoFillBackground(True)
         self.tab_differences.setPalette(self.background_color_palette)
         self.tab_differences.setObjectName(_fromUtf8("tab_differences"))
-        verticalLayout_2 = QtGui.QVBoxLayout(self.tab_differences)
-        verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+
+
         groupBox= QtGui.QGroupBox(self.tab_differences)
         groupBox.setObjectName(_fromUtf8("groupBox"))
         gridLayout = QtGui.QGridLayout(groupBox)
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
         groupBox.setMaximumSize((QtCore.QSize(600, 60)))
 
+        DIFF_table_controls_groupBox= QtGui.QGroupBox(self.tab_post_editing)
+        DIFF_table_controls_groupBox.setObjectName(_fromUtf8("DIFF_table_controls_groupBox"))
+        DIFF_table_controls_gridLayout = QtGui.QGridLayout(DIFF_table_controls_groupBox)
+        DIFF_table_controls_gridLayout.setObjectName(_fromUtf8("DIFF_table_controls_gridLayout"))
+        DIFF_table_controls_groupBox.setMaximumSize((QtCore.QSize(600, 60)))
 
-
+        verticalLayout_2 = QtGui.QVBoxLayout(self.tab_differences)
+        verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         verticalLayout_2.addWidget(groupBox)
+        verticalLayout_2.addWidget(DIFF_table_controls_groupBox)
+
         splitter = QtGui.QSplitter(self.tab_differences)
         splitter.setOrientation(QtCore.Qt.Horizontal)
         splitter.setObjectName(_fromUtf8("splitter"))
@@ -126,23 +134,41 @@ class Ui_MainWindow(object):
         self.search_table_differences= MyTable({'Search Results':[]},self.on_tableItemDifferencestextChanged,self.on_tableItemDifferences_selected,5,1)
         splitter.addWidget(self.search_table_differences)
 
-        self.btnBackDifferences = QtGui.QPushButton(groupBox)
+        self.btnBackDifferences = QtGui.QPushButton(DIFF_table_controls_groupBox)
         self.btnBackDifferences.setEnabled(True)
-        self.btnBackDifferences.setMaximumSize(QtCore.QSize(100, 30))
+        self.btnBackDifferences.setMinimumSize(QtCore.QSize(120, 30))
         self.btnBackDifferences.setFlat(False)
-        self.btnBackDifferences.setText(_translate("Dialog", "Back", None))
+        self.btnBackDifferences.setText(_translate("Dialog", "<<", None))
         self.btnBackDifferences.setObjectName(_fromUtf8("btnBackDifferences"))
-        gridLayout.addWidget(self.btnBackDifferences, 1, 1, 1, 1)
+        DIFF_table_controls_gridLayout.addWidget(self.btnBackDifferences, 5, 1, 1, 1)
         self.btnBackDifferences.hide()
 
-        self.btnNextDifferences = QtGui.QPushButton(groupBox)
+        self.btnNextDifferences = QtGui.QPushButton(DIFF_table_controls_groupBox)
         self.btnNextDifferences.setEnabled(True)
-        self.btnNextDifferences.setMaximumSize(QtCore.QSize(100, 30))
+        self.btnNextDifferences.setMaximumSize(QtCore.QSize(120, 30))
         self.btnNextDifferences.setFlat(False)
-        self.btnNextDifferences.setText(_translate("Dialog", "Next", None))
+        self.btnNextDifferences.setText(_translate("Dialog", ">>", None))
         self.btnNextDifferences.setObjectName(_fromUtf8("btnNextDifferences"))
-        gridLayout.addWidget(self.btnNextDifferences, 1, 2, 1, 1)
+        DIFF_table_controls_gridLayout.addWidget(self.btnNextDifferences, 5, 2, 1, 1)
         self.btnNextDifferences.hide()
+
+        self.btnLessRowsDifferences = QtGui.QPushButton(DIFF_table_controls_groupBox)
+        self.btnLessRowsDifferences.setEnabled(True)
+        self.btnLessRowsDifferences.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnLessRowsDifferences.setFlat(False)
+        self.btnLessRowsDifferences.setText(_translate("Dialog", "-", None))
+        self.btnLessRowsDifferences.setObjectName(_fromUtf8("btnLessRowsDifferences"))
+        DIFF_table_controls_gridLayout.addWidget(self.btnLessRowsDifferences, 5, 3, 1, 1)
+        self.btnLessRowsDifferences.hide()
+
+        self.btnAddRowsDifferences = QtGui.QPushButton(DIFF_table_controls_groupBox)
+        self.btnAddRowsDifferences.setEnabled(True)
+        self.btnAddRowsDifferences.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnAddRowsDifferences.setFlat(False)
+        self.btnAddRowsDifferences.setText(_translate("Dialog", "+", None))
+        self.btnAddRowsDifferences.setObjectName(_fromUtf8("btnAddRowsDifferences"))
+        DIFF_table_controls_gridLayout.addWidget(self.btnAddRowsDifferences, 5, 4, 1, 1)
+        self.btnAddRowsDifferences.hide()
 
         self.btnSearchDifferences = QtGui.QPushButton(groupBox)
         self.btnSearchDifferences.setEnabled(True)
@@ -150,7 +176,7 @@ class Ui_MainWindow(object):
         self.btnSearchDifferences.setObjectName(_fromUtf8("btnSearchDifferences"))
         self.btnSearchDifferences.setMaximumSize((QtCore.QSize(100, 30)))
         self.btnSearchDifferences.setText(_translate("Dialog", "Search", None))
-        gridLayout.addWidget(self.btnSearchDifferences, 1, 3, 1, 1)
+        gridLayout.addWidget(self.btnSearchDifferences, 1, 3, 1, 1, Qt.AlignLeft)
 
         #edit_target_differences
         self.edit_search_differences = QtGui.QLineEdit(groupBox)
@@ -389,12 +415,25 @@ class Ui_MainWindow(object):
         self.tab_post_editing.setAutoFillBackground(True)
         self.tab_post_editing.setPalette(self.background_color_palette)
         self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
-        verticalLayout_2 = QtGui.QVBoxLayout(self.tab_post_editing)
-        verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+
+
         groupBox= QtGui.QGroupBox(self.tab_post_editing)
         groupBox.setObjectName(_fromUtf8("groupBox"))
         gridLayout = QtGui.QGridLayout(groupBox)
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
+
+        self.PE_table_controls_groupBox= QtGui.QGroupBox(self.tab_post_editing)
+        self.PE_table_controls_groupBox.setObjectName(_fromUtf8("PE_table_controls_groupBox"))
+        PE_table_controls_gridLayout = QtGui.QGridLayout(self.PE_table_controls_groupBox)
+        PE_table_controls_gridLayout.setObjectName(_fromUtf8("PE_table_controls_gridLayout"))
+        groupBox.setMaximumSize((QtCore.QSize(1000, 150)))
+        self.PE_table_controls_groupBox.setMaximumSize((QtCore.QSize(1000, 60)))
+        self.PE_table_controls_groupBox.hide()
+
+        verticalLayout_2 = QtGui.QVBoxLayout(self.tab_post_editing)
+        verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        verticalLayout_2.addWidget(groupBox)
+        verticalLayout_2.addWidget(self.PE_table_controls_groupBox)
 
         #label_target_post_editing
         self.label_target_post_editing = QtGui.QLabel(groupBox)
@@ -433,39 +472,27 @@ class Ui_MainWindow(object):
         self.btn_bilingual_post_edition.setObjectName(_fromUtf8("btn_bilingual_post_edition"))
         gridLayout.addWidget(self.btn_bilingual_post_edition, 3, 3, 1, 1)
 
-        verticalLayout_2.addWidget(groupBox)
         splitter = QtGui.QSplitter(self.tab_post_editing)
         splitter.setOrientation(QtCore.Qt.Horizontal)
         splitter.setObjectName(_fromUtf8("splitter"))
 
-        splitter2 = QtGui.QSplitter(self.tab_post_editing)
-        splitter2.setOrientation(QtCore.Qt.Vertical)
-        splitter2.setObjectName(_fromUtf8("splitter2"))
-
         self.table_post_editing= MyTable({'col1':[], 'col2':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,3)
         splitter.addWidget(self.table_post_editing)
         verticalLayout_2.addWidget(splitter)
-        verticalLayout_2.setStretch(1, 8)
-        self.tab_post_editing.setAutoFillBackground(True)
-        self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
 
-        self.search_table_post_editing= MyTable({'Search Results':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,1)
+        self.search_table_post_editing= MyTable({'Search Results ':[]},self.on_tableItemPostEditing_textChanged,self.on_tableItemPostEdition_selected,5,1)
         splitter.addWidget(self.search_table_post_editing)
-        verticalLayout_2.addWidget(splitter2)
-        verticalLayout_2.setStretch(1, 8)
-        self.tab_post_editing.setAutoFillBackground(True)
-        self.tab_post_editing.setObjectName(_fromUtf8("tab_post_editing"))
         #edit_target_post_editing
         self.edit_search_post_editing = QtGui.QLineEdit(groupBox)
         self.edit_search_post_editing.setReadOnly(False)
         self.edit_search_post_editing.setObjectName(_fromUtf8("edit_search_post_editing"))
-        gridLayout.addWidget(self.edit_search_post_editing, 5, 3, 1, 2)
+        PE_table_controls_gridLayout.addWidget(self.edit_search_post_editing, 5, 6, 1, 2)
 
         self.btnSearchPostEditing = QtGui.QPushButton(groupBox)
         self.btnSearchPostEditing.setEnabled(True)
         self.btnSearchPostEditing.setFlat(False)
         self.btnSearchPostEditing.setObjectName(_fromUtf8("btnSearchPostEditing"))
-        gridLayout.addWidget(self.btnSearchPostEditing, 4, 3, 1, 1)
+        PE_table_controls_gridLayout.addWidget(self.btnSearchPostEditing, 5, 5, 1, 1)
         self.toggled_search_post_editing = True
         self.search_table_post_editing.hide()
         self.edit_search_post_editing.hide()
@@ -479,23 +506,37 @@ class Ui_MainWindow(object):
         gridLayout.addWidget(self.btnStartPostEditing, 4, 1, 1, 2)
         self.table_post_editing.hide()
 
-        self.btnBackPostEditing = QtGui.QPushButton(groupBox)
+        self.btnBackPostEditing = QtGui.QPushButton(self.PE_table_controls_groupBox)
         self.btnBackPostEditing.setEnabled(True)
         self.btnBackPostEditing.setMinimumSize(QtCore.QSize(120, 30))
         self.btnBackPostEditing.setFlat(False)
-        self.btnBackPostEditing.setText(_translate("Dialog", "Back", None))
+        self.btnBackPostEditing.setText(_translate("Dialog", "<<", None))
         self.btnBackPostEditing.setObjectName(_fromUtf8("btnBackPostEditing"))
-        gridLayout.addWidget(self.btnBackPostEditing, 5, 1, 1, 1)
-        self.btnBackPostEditing.hide()
+        PE_table_controls_gridLayout.addWidget(self.btnBackPostEditing, 5, 1, 1, 1)
 
-        self.btnNextPostEditing = QtGui.QPushButton(groupBox)
+        self.btnNextPostEditing = QtGui.QPushButton(self.PE_table_controls_groupBox)
         self.btnNextPostEditing.setEnabled(True)
         self.btnNextPostEditing.setMaximumSize(QtCore.QSize(120, 30))
         self.btnNextPostEditing.setFlat(False)
-        self.btnNextPostEditing.setText(_translate("Dialog", "Next", None))
+        self.btnNextPostEditing.setText(_translate("Dialog", ">>", None))
         self.btnNextPostEditing.setObjectName(_fromUtf8("btnNextPostEditing"))
-        gridLayout.addWidget(self.btnNextPostEditing, 5, 2, 1, 1)
-        self.btnNextPostEditing.hide()
+        PE_table_controls_gridLayout.addWidget(self.btnNextPostEditing, 5, 2, 1, 1)
+
+        self.btnLessRowsPostEditing = QtGui.QPushButton(self.PE_table_controls_groupBox)
+        self.btnLessRowsPostEditing.setEnabled(True)
+        self.btnLessRowsPostEditing.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnLessRowsPostEditing.setFlat(False)
+        self.btnLessRowsPostEditing.setText(_translate("Dialog", "-", None))
+        self.btnLessRowsPostEditing.setObjectName(_fromUtf8("btnLessRowsPostEditing"))
+        PE_table_controls_gridLayout.addWidget(self.btnLessRowsPostEditing, 5, 3, 1, 1)
+
+        self.btnAddRowsPostEditing = QtGui.QPushButton(self.PE_table_controls_groupBox)
+        self.btnAddRowsPostEditing.setEnabled(True)
+        self.btnAddRowsPostEditing.setMaximumSize(QtCore.QSize(120, 30))
+        self.btnAddRowsPostEditing.setFlat(False)
+        self.btnAddRowsPostEditing.setText(_translate("Dialog", "+", None))
+        self.btnAddRowsPostEditing.setObjectName(_fromUtf8("btnAddRowsPostEditing"))
+        PE_table_controls_gridLayout.addWidget(self.btnAddRowsPostEditing, 5, 4, 1, 1)
 
         self.btnSave = QtGui.QPushButton(groupBox)
         self.btnSave.setEnabled(True)
@@ -578,12 +619,12 @@ class Ui_MainWindow(object):
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
 
 
-        groupBox2 = QtGui.QGroupBox(groupBox)
-        groupBox2.setObjectName(_fromUtf8("groupBox2"))
-        groupBox2.setTitle(_translate("MainWindow", "Languages", None))
-        gridLayout2 = QtGui.QGridLayout(groupBox2)
-        gridLayout2.setObjectName(_fromUtf8("gridLayout2"))
-        gridLayout.addWidget(groupBox2, 1, 0, 1, 1)
+        languages_groupBox = QtGui.QGroupBox(groupBox)
+        languages_groupBox.setObjectName(_fromUtf8("languages_groupBox"))
+        languages_groupBox.setTitle(_translate("MainWindow", "Languages", None))
+        languages_gridLayout = QtGui.QGridLayout(languages_groupBox)
+        languages_gridLayout.setObjectName(_fromUtf8("languages_gridLayout"))
+        gridLayout.addWidget(languages_groupBox, 1, 0, 1, 1)
 
 
         groupBox3 = QtGui.QGroupBox(groupBox)
@@ -623,7 +664,7 @@ class Ui_MainWindow(object):
         menu.addAction('DE', lambda: self.choose_language("preprocessing","source",'DE'))
         self.preprocessing_source_language = ""
         self.btn_choose_source_lang_preprocessing.setMenu(menu)
-        gridLayout2.addWidget(self.btn_choose_source_lang_preprocessing, 1, 0, 1, 1)
+        languages_gridLayout.addWidget(self.btn_choose_source_lang_preprocessing, 1, 0, 1, 1)
         #btn_choose_target_lang_preprocessing
         self.btn_choose_target_lang_preprocessing = QtGui.QPushButton('Target Language')
         menu = QtGui.QMenu()
@@ -632,7 +673,7 @@ class Ui_MainWindow(object):
         menu.addAction('DE', lambda: self.choose_language("preprocessing","target",'DE'))
         self.preprocessing_target_language = ""
         self.btn_choose_target_lang_preprocessing.setMenu(menu)
-        gridLayout2.addWidget(self.btn_choose_target_lang_preprocessing, 2, 0, 1, 1)
+        languages_gridLayout.addWidget(self.btn_choose_target_lang_preprocessing, 2, 0, 1, 1)
 
         #label_source_preprocessing_tab
         self.label_source_preprocessing_tab = QtGui.QLabel(groupBox)
