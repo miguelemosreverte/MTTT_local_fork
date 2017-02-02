@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+import PyQt4.QtCore as QtCore
+import PyQt4.QtGui as QtGui
 
-class MyTable(QTableWidget):
+class MyTable(QtGui.QTableWidget):
     def __init__(self, data, tableItemChangedCallback,tableItemSelectedCallback,*args):
-        QTableWidget.__init__(self, *args)
+        QtGui.QTableWidget.__init__(self, *args)
         self.tableItemChangedCallback = tableItemChangedCallback
         self.tableItemSelectedCallback = tableItemSelectedCallback
         self.setAutoFillBackground(True)
         self.data = data
         self.setmydata()
-        self.setEditTriggers(QAbstractItemView.AllEditTriggers)        
+        self.setEditTriggers(QtGui.QAbstractItemView.AllEditTriggers)
         self.horizontalHeader().setStretchLastSection(True)
 
     def setmydata(self):
@@ -51,7 +51,7 @@ class MyTable(QTableWidget):
             horHeaders.append(key)
             for x, item in enumerate(data["target"]):
                 #newitem = QTableWidgetItem(item)
-                tableItem = QTextEdit()
+                tableItem = QtGui.QTextEdit()
                 tableItem.setText(item)
                 if y == 0: tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
@@ -69,7 +69,7 @@ class MyTable(QTableWidget):
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.setColumnHidden(2, not bilingual)
-        self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
+        self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
     def set_differences_table_data(self, data):
         horHeaders = []
@@ -79,7 +79,7 @@ class MyTable(QTableWidget):
             horHeaders.insert(y,key)
             for x, item in enumerate(data[key]):
                 #newitem = QTableWidgetItem(item)
-                tableItem = QTextEdit()
+                tableItem = QtGui.QTextEdit()
                 tableItem.setText(item)
                 if key != "target": tableItem.setReadOnly(True)
                 tableItem.mousePressEvent =  (lambda event= tableItem, tableItem= tableItem,x=x, y=y: self.tableItemSelectedCallback(event, tableItem,x,y))
@@ -89,7 +89,7 @@ class MyTable(QTableWidget):
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
-        self.horizontalHeader().setResizeMode(QHeaderView.Stretch)
+        self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
     def changeColorOfItem(self,X,Y):
         self.item(X,Y).setBackground(QColor(100,100,150))
