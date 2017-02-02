@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import PyQt4.QtCore as QtCore
 import PyQt4.QtGui as QtGui
 
@@ -90,12 +89,3 @@ class MyTable(QtGui.QTableWidget):
         self.resizeRowsToContents()
         self.setHorizontalHeaderLabels(horHeaders)
         self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-
-def main(args):
-    app = QApplication(args)
-    table = MyTable(data, 5, 1)
-    table.show()
-    sys.exit(app.exec_())
-
-if __name__=="__main__":
-    main(sys.argv)
