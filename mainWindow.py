@@ -258,7 +258,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnStats_clicked(self):
         self.save();
 
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target, self.output_directory)
         insertions =  self.statistics.calculate_insertions_per_segment()[0]
         deletions = self.statistics.calculate_deletions_per_segment()[0]
 
@@ -276,7 +276,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_log(self):
         log = {}
-        log_filepath = os.path.abspath("./saved/" + "log.json")
+        log_filepath = os.path.abspath(self.output_directory + "/log.json")
         try:
             with open(log_filepath) as json_data:
                 log = json.load(json_data)
@@ -310,7 +310,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnFirstStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target, self.output_directory)
         self.statistics.calculate_statistics("time_per_segment")
         self.HTMLview.setUrl(QUrl("statistics/generated/time_per_segment.html"));
         self.HTMLview.show()
@@ -321,7 +321,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnInsertionsStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target, self.output_directory)
         self.statistics.calculate_statistics("insertions")
         self.HTMLview.setUrl(QUrl("statistics/generated/insertions.html"));
         self.HTMLview.show()
@@ -332,7 +332,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_btnDeletionsStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
-        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        self.statistics = Statistics(self.unmodified_target, self.modified_target, self.output_directory)
         self.statistics.calculate_statistics("deletions")
         self.HTMLview.setUrl(QUrl("statistics/generated/deletions.html"));
         self.HTMLview.show()
@@ -344,14 +344,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         target_filename = self.original_target_path[self.original_target_path.rfind('/'):]
 
         unmodified_target = self.edit_target_post_editing.text()
-        shutil.copy2(unmodified_target, str("./saved/" + target_filename))
+        shutil.copy2(unmodified_target, str(self.output_directory + target_filename))
         self.save_using_log()
         self.get_modified_and_unmodified_target()
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):
         self.save()
-        self.btnSave.hide()
+        self.PE_save_groupBox.hide()
 
     @pyqtSignature("")
     def on_btnNextPostEditing_clicked(self):
@@ -538,7 +538,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        self.edit_output_evaluation_tab.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")))
+        self.output_directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.edit_output_post_editing.setText(self.output_directory)
+        self.edit_output_evaluation_tab.setText(self.output_directory)
 
     @pyqtSignature("")
     def on_btn_source_machine_translation_tab_clicked(self):
@@ -575,6 +577,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dialog.setViewMode(QFileDialog.Detail)
         if dialog.exec_():
             self.edit_target_post_editing.setText(dialog.selectedFiles()[0])
+
+    @pyqtSignature("")
+    def on_btn_output_post_editing_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        self.output_directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.edit_output_post_editing.setText(self.output_directory)
+        self.edit_output_evaluation_tab.setText(self.output_directory)
 
     @pyqtSignature("")
     def on_btn_lm_text_preprocessing_tab_clicked(self):
@@ -689,8 +700,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.last_change_timestamp not in self.log:
                 self.log[self.last_change_timestamp] = {}
             self.log[self.last_change_timestamp][modified_reference_index] = modified_segment
-        with open("./saved/" + "log.json", 'w') as outfile:
+        with open(self.output_directory + "/log.json", 'w') as outfile:
             json.dump(self.log, outfile)
+        print "saved log at ",self.output_directory + "/log.json"
 
 
     @pyqtSignature("QString")

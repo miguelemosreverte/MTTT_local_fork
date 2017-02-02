@@ -10,9 +10,10 @@ import difflib
 
 class Statistics:
 
-    def __init__(self, source, target):
+    def __init__(self, source, target, output_directory):
         self.source_text = source
         self.target_text = target
+        self.output_directory = output_directory
     def calculate_time_per_segment(self):
             seconds_spent_by_segment = {}
             percentaje_spent_by_segment = {}
@@ -151,7 +152,7 @@ class Statistics:
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
-        with open("./saved/log.json") as json_data:
+        with open(self.output_directory + "/log.json") as json_data:
             self.log = json.load(json_data)
 
         pie_as_json_string = ""

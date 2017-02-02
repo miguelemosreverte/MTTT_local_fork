@@ -355,7 +355,7 @@ class Ui_MainWindow(object):
         self.btn_source_evaluation_tab.setText(_translate("Dialog", "...", None))
         self.label_target_evaluation_tab.setText(_translate("MainWindow", "Target text", None))
         self.btn_target_evaluation_tab.setText(_translate("Dialog", "...", None))
-        self.label_output_dir_evaluation_tab.setText(_translate("MainWindow", "Output text", None))
+        self.label_output_dir_evaluation_tab.setText(_translate("MainWindow", "Output Directory", None))
         self.btn_output_dir_evaluation_tab.setText(_translate("Dialog", "...", None))
         self.btnEvaluation.setText(_translate("MainWindow", "Start Evaluation", None))
         groupBox_evaluation.setTitle(_translate("MainWindow", "Evaluation", None))
@@ -432,7 +432,7 @@ class Ui_MainWindow(object):
 
         post_editing_files_settings_groupBox = QtGui.QGroupBox(groupBox)
         post_editing_files_settings_groupBox.setObjectName(_fromUtf8("post_editing_files_settings_groupBox"))
-        post_editing_files_settings_groupBox.setMaximumSize((QtCore.QSize(1000, 150)))
+        post_editing_files_settings_groupBox.setMaximumSize((QtCore.QSize(1000, 200)))
         #post_editing_files_settings_groupBox.setTitle(_translate("MainWindow", "Languages", None))
         PE_files_gridLayout = QtGui.QGridLayout(post_editing_files_settings_groupBox)
         PE_files_gridLayout.setObjectName(_fromUtf8("PE_files_gridLayout"))
@@ -468,19 +468,33 @@ class Ui_MainWindow(object):
         PE_files_gridLayout.addWidget(self.edit_source_post_editing, 2, 2, 1, 1)
         self.edit_source_post_editing.hide()
 
+        #label_output_post_editing
+        self.label_output_post_editing = QtGui.QLabel(groupBox)
+        self.label_output_post_editing.setObjectName(_fromUtf8("label_output_post_editing"))
+        PE_files_gridLayout.addWidget(self.label_output_post_editing, 3, 1, 1, 1)
+        #btn_output_post_editing
+        self.btn_output_post_editing = QtGui.QPushButton(groupBox)
+        self.btn_output_post_editing.setObjectName(_fromUtf8("btn_output_post_editing"))
+        PE_files_gridLayout.addWidget(self.btn_output_post_editing, 3, 3, 1, 1)
+        #edit_output_post_editing
+        self.edit_output_post_editing = QtGui.QLineEdit(groupBox)
+        self.edit_output_post_editing.setReadOnly(True)
+        self.edit_output_post_editing.setObjectName(_fromUtf8("edit_output_post_editing"))
+        PE_files_gridLayout.addWidget(self.edit_output_post_editing, 3, 2, 1, 1)
+
         self.btnStartPostEditing = QtGui.QPushButton(groupBox)
         self.btnStartPostEditing.setEnabled(True)
         self.btnStartPostEditing.setMinimumSize(QtCore.QSize(120, 30))
         self.btnStartPostEditing.setFlat(False)
         self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
         self.btnStartPostEditing.setObjectName(_fromUtf8("btnStartPostEditing"))
-        PE_files_gridLayout.addWidget(self.btnStartPostEditing, 4, 1, 1, 2)
+        PE_files_gridLayout.addWidget(self.btnStartPostEditing, 5, 1, 1, 2)
 
         self.btn_bilingual_post_edition= QtGui.QCheckBox(groupBox)
         self.btn_bilingual_post_edition.setEnabled(True)
         self.btn_bilingual_post_edition.setText("bilingual post-edition")
         self.btn_bilingual_post_edition.setObjectName(_fromUtf8("btn_bilingual_post_edition"))
-        PE_files_gridLayout.addWidget(self.btn_bilingual_post_edition, 3, 3, 1, 1)
+        PE_files_gridLayout.addWidget(self.btn_bilingual_post_edition, 4, 3, 1, 1)
 
 
 
@@ -641,6 +655,8 @@ class Ui_MainWindow(object):
         self.btn_source_post_editing.setText(_translate("Dialog", "...", None))
         self.label_target_post_editing.setText(_translate("MainWindow", "MT text", None))
         self.btn_target_post_editing.setText(_translate("Dialog", "...", None))
+        self.label_output_post_editing.setText(_translate("MainWindow", "Output Directory", None))
+        self.btn_output_post_editing.setText(_translate("Dialog", "...", None))
 
 
 
