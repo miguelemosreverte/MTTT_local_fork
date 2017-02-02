@@ -144,6 +144,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.post_editing_data["source"] = self.source_text
         self.post_editing_data["target"] = self.target_text
         self.table_offset_PostEdition = 0
+        self.table_rows_PostEdition = 5
+        self.table_rows_Differences = 5
         self.table_offset_Differences = 0
 
         self.update_table_PostEdition()
@@ -159,14 +161,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def update_table_PostEdition(self):
         start = self.table_offset_PostEdition
-        end = self.table_offset_PostEdition + 5
+        end = self.table_offset_PostEdition + self.table_rows_PostEdition
         self.post_editing_data["source"] = self.source_text[start:end]
         self.post_editing_data["target"] = self.target_text[start:end]
         self.table_post_editing.set_post_editing_table_data(self.post_editing_data, self.btn_bilingual_post_edition.isChecked())
 
         for y in  self.modified_references_indices:
             y -= start
-            if y >= 0 and y < 5:
+            if y >= 0 and y < self.table_rows_PostEdition:
                 self.setTableRowGreen(y)
 
     def setTableRowGreen(self,row_index):
@@ -177,7 +179,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def update_table_Differences(self):
         start = self.table_offset_Differences
-        end = self.table_offset_Differences + 5
+        end = self.table_offset_Differences + + self.table_rows_Differences
         self.differences_data["source"] = self.enriched_target_text_original[start:end]
         self.differences_data["target"] = self.enriched_target_text_modified[start:end]
         self.table_differences.set_differences_table_data(self.differences_data)
@@ -352,6 +354,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_table_PostEdition()
 
     @pyqtSignature("")
+    def on_btnLessRowsPostEditing_clicked(self):
+        if self.table_rows_PostEdition:
+            self.table_rows_PostEdition -= 1
+            self.table_post_editing.removeRow(0)
+            self.update_table_PostEdition()
+
+    @pyqtSignature("")
+    def on_btnAddRowsPostEditing_clicked(self):
+        if self.table_rows_PostEdition < len(self.target_text):
+            self.table_rows_PostEdition += 1
+            self.table_post_editing.insertRow(self.table_post_editing.rowCount())
+            self.update_table_PostEdition()
+
+    @pyqtSignature("")
     def on_btnNextDifferences_clicked(self):
         self.table_offset_Differences += 1
         self.update_table_Differences()
@@ -361,6 +377,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_offset_Differences -= 1
         if self.table_offset_Differences < 0: self.table_offset_Differences = 0
         self.update_table_Differences()
+
+    @pyqtSignature("")
+    def on_btnLessRowsDifferences_clicked(self):
+        if self.table_rows_Differences:
+            self.table_rows_Differences -= 1
+            self.table_differences.removeRow(0)
+            self.update_table_Differences()
+
+    @pyqtSignature("")
+    def on_btnAddRowsDifferences_clicked(self):
+        if self.table_rows_Differences< len(self.target_text):
+            self.table_rows_Differences += 1
+            self.table_differences.insertRow(self.table_differences.rowCount())
+            self.update_table_Differences()
 
     @pyqtSignature("")
     def on_btnSearchDifferences_clicked(self):
