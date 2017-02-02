@@ -99,6 +99,7 @@ class Ui_MainWindow(object):
                 self.preprocessing_source_language = language
             elif source_or_target == "target":
                 self.preprocessing_target_language = language
+
     def initialize_tab_differences(self):
         self.tab_differences = QtGui.QWidget()
         self.tab_differences.setAutoFillBackground(True)
@@ -368,7 +369,7 @@ class Ui_MainWindow(object):
         verticalLayout_2 = QtGui.QVBoxLayout(self.tab_machine_translation)
         verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         groupBox= QtGui.QGroupBox(self.tab_machine_translation)
-        groupBox.setMaximumSize(QtCore.QSize(500, 80))
+        groupBox.setMaximumSize(QtCore.QSize(800, 80))
         groupBox.setObjectName(_fromUtf8("groupBox"))
         gridLayout = QtGui.QGridLayout(groupBox)
         gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -405,7 +406,25 @@ class Ui_MainWindow(object):
         self.btnMachineTranslation.setMinimumSize(QtCore.QSize(120, 30))
         self.btnMachineTranslation.setFlat(False)
         self.btnMachineTranslation.setObjectName(_fromUtf8("btnMachineTranslation"))
-        gridLayout.addWidget(self.btnMachineTranslation, 4, 1, 1, 4)
+        gridLayout.addWidget(self.btnMachineTranslation, 2, 1, 1, 3)
+
+
+        #btnChooseLM
+        self.btnChooseLM = QtGui.QPushButton(groupBox)
+        self.btnChooseLM.setEnabled(True)
+        self.btnChooseLM.setMinimumSize(QtCore.QSize(120, 60))
+        self.btnChooseLM.setFlat(False)
+        self.btnChooseLM.setObjectName(_fromUtf8("btnChooseLM"))
+        self.btnChooseLM.setText(_translate("MainWindow", "Choose a Model", None))
+        gridLayout.addWidget(self.btnChooseLM, 1, 4, 2, 1)
+        #btnCreateLM
+        self.btnCreateLM = QtGui.QPushButton(groupBox)
+        self.btnCreateLM.setEnabled(True)
+        self.btnCreateLM.setMinimumSize(QtCore.QSize(120, 60))
+        self.btnCreateLM.setFlat(False)
+        self.btnCreateLM.setObjectName(_fromUtf8("btnCreateLM"))
+        self.btnCreateLM.setText(_translate("MainWindow", "Create a Model", None))
+        gridLayout.addWidget(self.btnCreateLM, 1, 5, 2, 1)
 
         self.label_source_machine_translation_tab.setText(_translate("MainWindow", "Source text", None))
         self.btn_source_machine_translation_tab.setText(_translate("Dialog", "...", None))

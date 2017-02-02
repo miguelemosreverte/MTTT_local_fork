@@ -87,12 +87,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSignature("")
     def on_btnMachineTranslation_clicked(self):
         source = self.edit_source_machine_translation_tab.text()
-
         if not source:
             doAlert("Please choose a source text first.")
             return
         text = self.migrated_backend_main._machine_translation(source).decode('utf8')
         self.results_machine_translation.setText(text)
+
+    @pyqtSignature("")
+    def on_btnChooseLM_clicked(self):
+        self.edit_output_preprocessing_tab.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")))
+
+    @pyqtSignature("")
+    def on_btnCreateLM_clicked(self):
+        self.tabWidget.setCurrentIndex(0)
 
     def showDiffs(self):
         self.table_offset_Differences = 0
