@@ -650,9 +650,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open("./saved/" + "log.json", 'w') as outfile:
             json.dump(self.log, outfile)
 
-        self.modified_references_indices = []
-
-
 
     @pyqtSignature("QString")
     def on_labelInfo_linkActivated(self, link):
