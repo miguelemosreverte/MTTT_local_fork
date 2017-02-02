@@ -128,6 +128,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_post_editing.show()
 
         self.source_text = []
+        self.unchanged_target_text = []
         self.target_text = []
         if self.btn_bilingual_post_edition.isChecked():
 
@@ -140,6 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for line in fp:
                     line = line.decode("utf-8")
                     if line != '\n':
+                       self.unchanged_target_text.append(line)
                        self.target_text.append(line)
         self.post_editing_data["source"] = self.source_text
         self.post_editing_data["target"] = self.target_text
@@ -147,6 +149,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_rows_PostEdition = 5
         self.table_rows_Differences = 5
         self.table_offset_Differences = 0
+        self.show_insertions_stats = False
+        self.show_deletions_stats = False
 
         self.update_table_PostEdition()
         self.PE_table_controls_groupBox.show()
@@ -252,17 +256,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSignature("")
     def on_btnStats_clicked(self):
         self.save();
+
+        self.statistics = Statistics(self.unmodified_target, self.modified_target)
+        insertions =  self.statistics.calculate_insertions_per_segment()[0]
+        deletions = self.statistics.calculate_deletions_per_segment()[0]
+
         if not (hasattr(self,'toggled_statistics_menu')):
             self.toggled_statistics_menu = True
         else: self.toggled_statistics_menu = not self.toggled_statistics_menu
         if self.toggled_statistics_menu:
             self.btnFirstStat.show()
-            self.btnSecondStat.show()
-            self.btnThirdStat.show()
+            if insertions:self.btnInsertionsStat.show()
+            if deletions:self.btnDeletionsStat.show()
         else:
             self.btnFirstStat.hide()
-            self.btnSecondStat.hide()
-            self.btnThirdStat.hide()
+            self.btnInsertionsStat.hide()
+            self.btnDeletionsStat.hide()
 
     def load_log(self):
         log = {}
@@ -308,7 +317,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setCurrentIndex(6)
 
     @pyqtSignature("")
-    def on_btnSecondStat_clicked(self):
+    def on_btnInsertionsStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
         self.statistics = Statistics(self.unmodified_target, self.modified_target)
@@ -319,7 +328,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setCurrentIndex(6)
 
     @pyqtSignature("")
-    def on_btnThirdStat_clicked(self):
+    def on_btnDeletionsStat_clicked(self):
         self.save_using_log()
         self.get_modified_and_unmodified_target()
         self.statistics = Statistics(self.unmodified_target, self.modified_target)
@@ -336,6 +345,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         unmodified_target = self.edit_target_post_editing.text()
         shutil.copy2(unmodified_target, str("./saved/" + target_filename))
         self.save_using_log()
+        self.get_modified_and_unmodified_target()
 
     @pyqtSignature("")
     def on_btnSave_clicked(self):
@@ -667,6 +677,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnDiff.show()
         self.btnSave.show()
         self.target_text[row_index] = (str(tableItem.toPlainText().toUtf8())).decode('utf8')
+        if len(self.target_text[row_index]) > len(self.unchanged_target_text[row_index]): self.show_insertions_stats = True
+        if len(self.target_text[row_index]) < len(self.unchanged_target_text[row_index]): self.show_deletions_stats = True
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 
