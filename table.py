@@ -91,9 +91,6 @@ class MyTable(QtGui.QTableWidget):
         self.setHorizontalHeaderLabels(horHeaders)
         self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
-    def changeColorOfItem(self,X,Y):
-        self.item(X,Y).setBackground(QColor(100,100,150))
-
 def main(args):
     app = QApplication(args)
     table = MyTable(data, 5, 1)
