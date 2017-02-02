@@ -154,6 +154,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.update_table_PostEdition()
         self.PE_table_controls_groupBox.show()
+        self.PE_search_groupBox.show()
 
     @pyqtSignature("QString")
     def on_edit_search_differences_textEdited(self,text):
@@ -673,9 +674,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.modified_table_items_coordinates.append((row_index,1))
         self.modified_table_items_coordinates.append((row_index,2))
         self.setTableRowGreen(row_index)
-        self.btnStats.show()
-        self.btnDiff.show()
-        self.btnSave.show()
+        self.PE_diff_and_stats_groupBox.show()
+        self.PE_save_groupBox.show()
         self.target_text[row_index] = (str(tableItem.toPlainText().toUtf8())).decode('utf8')
         if len(self.target_text[row_index]) > len(self.unchanged_target_text[row_index]): self.show_insertions_stats = True
         if len(self.target_text[row_index]) < len(self.unchanged_target_text[row_index]): self.show_deletions_stats = True
