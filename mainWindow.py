@@ -86,7 +86,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSignature("")
     def on_btnMachineTranslation_clicked(self):
-        import textwrap
         source = self.edit_source_machine_translation_tab.text()
 
         if not source:
@@ -95,15 +94,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         text = self.migrated_backend_main._machine_translation(source).decode('utf8')
         self.results_machine_translation.setText(text)
 
-
-    @pyqtSignature("")
-    def on_btnStartDifferences_clicked(self):
-        self.table_offset_Differences = 0
-        self.update_table_Differences()
-        self.btnNextDifferences.show()
-        self.btnBackDifferences.show()
-        self.btnAddRowsDifferences.show()
-        self.btnLessRowsDifferences.show()
     def showDiffs(self):
         self.table_offset_Differences = 0
         self.update_table_Differences()
@@ -114,15 +104,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_differences.show()
 
     @pyqtSignature("")
-    def on_btnStartPostEditing_clicked(self):
-        import textwrap
+    def on_btnPostEditing_clicked(self):
         source = self.edit_source_post_editing.text()
         target = self.edit_target_post_editing.text()
+        output = self.edit_output_post_editing.text()
         if not source and self.btn_bilingual_post_edition.isChecked():
             doAlert("Please choose a source text first.")
             return
         if not target:
             doAlert("Please choose a target text first.")
+            return
+        if not output:
+            doAlert("Please choose an output directory first.")
             return
 
         self.table_post_editing.show()
@@ -149,8 +142,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_rows_PostEdition = 5
         self.table_rows_Differences = 5
         self.table_offset_Differences = 0
-        self.show_insertions_stats = False
-        self.show_deletions_stats = False
+        self.lastChangedSegmentIndex = -1
 
         self.update_table_PostEdition()
         self.PE_table_controls_groupBox.show()
@@ -688,8 +680,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.PE_diff_and_stats_groupBox.show()
         self.PE_save_groupBox.show()
         self.target_text[row_index] = (str(tableItem.toPlainText().toUtf8())).decode('utf8')
-        if len(self.target_text[row_index]) > len(self.unchanged_target_text[row_index]): self.show_insertions_stats = True
-        if len(self.target_text[row_index]) < len(self.unchanged_target_text[row_index]): self.show_deletions_stats = True
+
+        if self.btn_check_autosave.isChecked() and row_index != self.lastChangedSegmentIndex:
+            self.save()
+        self.lastChangedSegmentIndex = row_index
         if row_index not in self.modified_references_indices:
             self.modified_references_indices.append(row_index)
 
@@ -702,7 +696,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log[self.last_change_timestamp][modified_reference_index] = modified_segment
         with open(self.output_directory + "/log.json", 'w') as outfile:
             json.dump(self.log, outfile)
-        print "saved log at ",self.output_directory + "/log.json"
 
 
     @pyqtSignature("QString")

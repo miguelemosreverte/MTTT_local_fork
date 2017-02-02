@@ -210,7 +210,7 @@ class Ui_MainWindow(object):
         self.btn_source_evaluation_tab.setText(_translate("Dialog", "...", None))
         self.label_target_evaluation_tab.setText(_translate("MainWindow", "Target text", None))
         self.btn_target_evaluation_tab.setText(_translate("Dialog", "...", None))
-        self.label_output_dir_evaluation_tab.setText(_translate("MainWindow", "Output text", None))
+        self.label_output_dir_evaluation_tab.setText(_translate("MainWindow", "Output Directory", None))
         self.btn_output_dir_evaluation_tab.setText(_translate("Dialog", "...", None))
         self.btnEvaluation.setText(_translate("MainWindow", "Start Evaluation", None))
 
@@ -420,7 +420,7 @@ class Ui_MainWindow(object):
 
 
         groupBox = QtGui.QGroupBox(self.tab_post_editing)
-        groupBox.setMaximumSize((QtCore.QSize(1000, 225)))
+        groupBox.setMaximumSize((QtCore.QSize(1000, 250)))
         groupBox.setObjectName(_fromUtf8("groupBox"))
         groupBox.setStyleSheet("""#groupBox
         {
@@ -432,7 +432,7 @@ class Ui_MainWindow(object):
 
         post_editing_files_settings_groupBox = QtGui.QGroupBox(groupBox)
         post_editing_files_settings_groupBox.setObjectName(_fromUtf8("post_editing_files_settings_groupBox"))
-        post_editing_files_settings_groupBox.setMaximumSize((QtCore.QSize(1000, 200)))
+        post_editing_files_settings_groupBox.setMaximumSize((QtCore.QSize(1000, 250)))
         #post_editing_files_settings_groupBox.setTitle(_translate("MainWindow", "Languages", None))
         PE_files_gridLayout = QtGui.QGridLayout(post_editing_files_settings_groupBox)
         PE_files_gridLayout.setObjectName(_fromUtf8("PE_files_gridLayout"))
@@ -482,13 +482,13 @@ class Ui_MainWindow(object):
         self.edit_output_post_editing.setObjectName(_fromUtf8("edit_output_post_editing"))
         PE_files_gridLayout.addWidget(self.edit_output_post_editing, 3, 2, 1, 1)
 
-        self.btnStartPostEditing = QtGui.QPushButton(groupBox)
-        self.btnStartPostEditing.setEnabled(True)
-        self.btnStartPostEditing.setMinimumSize(QtCore.QSize(120, 30))
-        self.btnStartPostEditing.setFlat(False)
-        self.btnStartPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
-        self.btnStartPostEditing.setObjectName(_fromUtf8("btnStartPostEditing"))
-        PE_files_gridLayout.addWidget(self.btnStartPostEditing, 5, 1, 1, 2)
+        self.btnPostEditing = QtGui.QPushButton(groupBox)
+        self.btnPostEditing.setEnabled(True)
+        self.btnPostEditing.setMinimumSize(QtCore.QSize(120, 30))
+        self.btnPostEditing.setFlat(False)
+        self.btnPostEditing.setText(_translate("Dialog", "Start Post-Editing", None))
+        self.btnPostEditing.setObjectName(_fromUtf8("btnPostEditing"))
+        PE_files_gridLayout.addWidget(self.btnPostEditing, 5, 1, 1, 2)
 
         self.btn_bilingual_post_edition= QtGui.QCheckBox(groupBox)
         self.btn_bilingual_post_edition.setEnabled(True)
@@ -592,7 +592,7 @@ class Ui_MainWindow(object):
 
         self.PE_save_groupBox = QtGui.QGroupBox(groupBox)
         self.PE_save_groupBox.setObjectName(_fromUtf8("PE_save_groupBox"))
-        self.PE_save_groupBox.setMaximumSize((QtCore.QSize(100, 60)))
+        self.PE_save_groupBox.setMinimumSize((QtCore.QSize(120, 80)))
         self.PE_save_groupBox.hide()
         gridLayout5 = QtGui.QGridLayout(self.PE_save_groupBox)
         gridLayout5.setObjectName(_fromUtf8("gridLayout5"))
@@ -605,6 +605,12 @@ class Ui_MainWindow(object):
         self.btnSave.setText(_translate("Dialog", "Save", None))
         self.btnSave.setObjectName(_fromUtf8("btnSave"))
         gridLayout5.addWidget(self.btnSave, 1,1, 1, 1)
+        self.btn_check_autosave = QtGui.QCheckBox(groupBox)
+        self.btn_check_autosave.setEnabled(True)
+        self.btn_check_autosave.setText("Autosave")
+        self.btn_check_autosave.setMinimumSize(QtCore.QSize(5, 5))
+        self.btn_check_autosave.setObjectName(_fromUtf8("btn_check_autosave"))
+        gridLayout5.addWidget(self.btn_check_autosave, 2,1, 1, 1)
 
 
         self.PE_search_groupBox = QtGui.QGroupBox(groupBox)
