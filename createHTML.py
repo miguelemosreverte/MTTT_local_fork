@@ -142,8 +142,6 @@ class Evaluator:
                 for team, d in sorted(self.data[langs][evtype].items(), key=lambda x: -1 * x[1]['wac'] ):
                     s += "<tr><th>" + team + "</th><td>" + str(round(d['ac'],3)) + "</td><td>" + str(round(d['wac'],3)) + "</td><td>" + str(d['rec']) + "</tr>"
                 s += "</table>"
-        html_output_folder = os.path.abspath("HTML output/")
-        if not os.path.exists(html_output_folder): os.makedirs(html_output_folder)
         with open(html_output_folder + "/" + "table" + '.html','w') as f: f.write(s)
 
     def start_evaluation_process(self):

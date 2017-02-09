@@ -943,6 +943,7 @@ class MyWindow(Gtk.Window):
         evaluation_results_frame = Gtk.Frame()
 
         self.HTML_view = WebKit.WebView()
+        if not os.path.exists("HTML output/"): os.makedirs("HTML output/")
         f = open('HTML output/table.html', 'w+')
         f.write("");f.close()
         uri = "HTML output/table.html"
