@@ -783,7 +783,7 @@ class MyWindow(Gtk.Window):
         output = ""
         target_lang = ""
         for line in open(self.output_directory + '/lm.ini'):
-            if "target_lang" in line: target_lang = line.split(':')[1]; print line
+            if "target_lang" in line: target_lang = line.split(':')[1]
         in_file = self.mt_in_text.get_text()
         if not is_valid_file(in_file):
             output = "ERROR: %s should be a valid file." % in_file
@@ -845,7 +845,7 @@ class MyWindow(Gtk.Window):
                                self.evaluation_mt)
         inside_grid.add(self.st_button)
 
-        #  Evaluation Metrics: Reference Text Picker
+        #  Evaluation Metrics: mt Text Picker
         tt_label = Gtk.Label("Reference")
         inside_grid.attach_next_to(tt_label,
                                    st_label,
@@ -863,15 +863,34 @@ class MyWindow(Gtk.Window):
                                    self.st_button,
                                    Gtk.PositionType.BOTTOM, 1, 10)
 
+
+        #  Evaluation Metrics: MT Test Text Picker
+        tt_test_label = Gtk.Label("PostEdited Reference")
+        inside_grid.attach_next_to(tt_test_label,
+                                   tt_label,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        self.evaluation_reference_test = Gtk.Entry()
+        self.evaluation_reference_test.set_text("")
+        inside_grid.attach_next_to(self.evaluation_reference_test,
+                                   self.evaluation_reference,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        self.tt_test_button = Gtk.Button("Choose File")
+        self.tt_test_button.connect("clicked",
+                               self._on_file_clicked,
+                               self.evaluation_reference_test)
+        inside_grid.attach_next_to(self.tt_test_button,
+                                   self.tt_button,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+
         #  Evaluation Metrics: Output Text Picker
         ot_label = Gtk.Label("Output Directory")
         inside_grid.attach_next_to(ot_label,
-                                   tt_label,
+                                   tt_test_label,
                                    Gtk.PositionType.BOTTOM, 1, 10)
         self.evaluation_output = Gtk.Entry()
         self.evaluation_output.set_text("")
         inside_grid.attach_next_to(self.evaluation_output,
-                                   self.evaluation_reference,
+                                   self.evaluation_reference_test,
                                    Gtk.PositionType.BOTTOM, 1, 10)
         ot_button = Gtk.Button("Choose Directory")
         ot_button.connect("clicked",
@@ -879,7 +898,7 @@ class MyWindow(Gtk.Window):
                                self.evaluation_output,
                                "change output directory")
         inside_grid.attach_next_to(ot_button,
-                                   self.tt_button,
+                                   self.tt_test_button,
                                    Gtk.PositionType.BOTTOM, 1, 10)
         inside_grid.set_column_spacing(10)
 
@@ -963,7 +982,6 @@ class MyWindow(Gtk.Window):
         self.image1.set_from_file("HTML output/best.png")
         self.image2.set_from_file("HTML output/oof.png")
         self.table.show()
-        print "WHAT"
 
     def setEvaluationOption(self,evaluation_option):
         self.evaluation_option = evaluation_option
@@ -976,9 +994,11 @@ class MyWindow(Gtk.Window):
     def _evaluate(self, button):
         fields_filled = (self.evaluation_mt.get_text()
                 and self.evaluation_reference.get_text()
+                and self.evaluation_reference_test.get_text()
                 and self.evaluation_output.get_text())
         files_exists = (is_valid_file(self.evaluation_mt.get_text())
                 and is_valid_file(self.evaluation_reference.get_text())
+                and is_valid_file(self.evaluation_reference_test.get_text())
                 and is_valid_dir(self.evaluation_output.get_text()))
         equal_ammount_of_lines = False
         if fields_filled and files_exists:
@@ -989,7 +1009,8 @@ class MyWindow(Gtk.Window):
 
             self.evaluator = Evaluator(
             self.evaluation_reference.get_text(),
-            self.evaluation_mt.get_text())
+            self.evaluation_mt.get_text(),
+            self.evaluation_reference_test.get_text())
             self.evaluator.start_evaluation_process()
             self.reload_evaluation_results()
 
@@ -1002,6 +1023,8 @@ class MyWindow(Gtk.Window):
                 self.evaluation_warning_label.set_text("ERROR. The evaluation source file does not exist.")
             if not is_valid_file(self.evaluation_reference.get_text()):
                 self.evaluation_warning_label.set_text("ERROR. The evaluation reference file does not exist.")
+            if not is_valid_file(self.evaluation_reference_test.get_text()):
+                self.evaluation_warning_label.set_text("ERROR. The evaluation reference test file does not exist.")
             if not is_valid_dir(self.evaluation_output.get_text()):
                 self.evaluation_warning_label.set_text("ERROR. The evaluation output directory is not choosen.")
 

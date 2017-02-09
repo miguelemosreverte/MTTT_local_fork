@@ -7,53 +7,59 @@ import os
 import numpy as np
 
 class Evaluator:
-    def __init__(self,reference_filepath,mt_filepath):
+    def __init__(self,reference_filepath,mt_filepath,mt_test_filepath):
         self.reference_filepath = reference_filepath
         self.mt_filepath = mt_filepath
-        if (os.path.splitext(self.reference_filepath)[1] != '.xml'):
+        self.mt_test_filepath = mt_test_filepath
+        if not os.path.exists("./temp"):
+            os.makedirs("./temp")
+
+        if (os.path.splitext(self.reference_filepath)[1] != '.xml') and (os.path.splitext(self.mt_filepath)[1] != '.xml'):
+            self.to_xml("output")
             self.to_xml("ref")
 
-        if (os.path.splitext(self.mt_filepath)[1] != '.xml'):
-            self.to_xml("output")
 
     def to_xml(self, option):
 
-        if option == "output":
-            filepath = self.mt_filepath
-            self.mt_filepath += ".xml"
-        if option == "ref":
-             filepath = self.reference_filepath
-             self.reference_filepath += ".xml"
-        f = open(filepath + ".xml", 'w+');f.write("");f.close()
 
-        id = 0
-        with open(filepath) as f1, open(filepath +  ".xml", 'a') as f2:
-            f2.write('<sentencepairs L1="en" L2="de">' + "\n")
+        mt_and_mt_test = {}
+        with open(self.reference_filepath) as f: untranslated = f.read().splitlines()
+        with open(self.mt_filepath) as f: mt_and_mt_test["ref"] = f.read().splitlines()
+        with open(self.mt_test_filepath) as f: mt_and_mt_test["output"] = f.read().splitlines()
 
-            for line in f1:
-                id += 1
+        output_filepath = ""
+        content = ""
+        if option == "output":output_filepath = "./temp/CNRC.en-de.run1.xml"
+        if option == "ref":   output_filepath = "./temp/en-de.gold.tokenised.xml"
+        f = open(output_filepath, 'w+');f.write("");f.close()
+        #output_filepath += ".xml"
+        with open(output_filepath, 'a') as f2:
+            content += ('<sentencepairs L1="en" L2="de">' + "\n")
+            for index,l1 in enumerate(untranslated):
+                l2 = mt_and_mt_test[option][index]
                 if option == "ref":
-                    f2.write('<s category="a" source="EndStation C2 - Spiros Koukidis, Jörg Kassner, Andrea Näfken, Sabine Tews" id="'+str(id)+'">\n')
+                    content += ('<s category="a" source="EndStation C2 - Spiros Koukidis, Jörg Kassner, Andrea Näfken, Sabine Tews" id="'+str(index)+'">\n')
                 if option == "output":
-                    f2.write('<s id="%s">\n'%str(id))
-                pre = '<input><f id="%s">'%str(id)
-                post = '</input></f>'
-                f2.write(pre + line.replace('\n','') + post + "\n")
+                    content += ('<s id="%s">\n'%str(index))
+                pre = '<input><f id="1">'#%str(index)
+                post = '</f></input>'
+                content += (pre + l1.replace('\n','') + post + "\n")
 
-                pre = '<%s><f id="%s">'% (option,str(id))
-                post = '</%s></f>'%option
-                f2.write(pre + line.replace('\n','') + post + "\n")
-                f2.write('</s>' + "\n")
-
+                pre = '<%s><f id="1">'% option#(option,str(index))
+                post = '</f></%s>'%option
+                content += (pre + l2.replace('\n','') + post + "\n")
+                content += ('</s>' + "\n")
+            content += ('</sentencepairs>' + "\n")
+            f2.write(content)
     def evaluate(self):
-        os.chdir("./semeval2014task5/evaluation/")
-        f = self.mt_filepath#"CNRC.en-de.run1.xml"
+        #os.chdir("./semeval2014task5/evaluation/")
+        os.chdir("./temp/")
+        f = "CNRC.en-de.run1.xml"#self.mt_filepath#"CNRC.en-de.run1.xml"
 
         fields = os.path.basename(f).split('.')
-        team = self.mt_filepath.split(".")[:-1][0]
-        print team
-        L1, L2 = ['en','de']
-        run = 'run1'
+        team = fields[0]
+        L1, L2 = fields[1].split('-')
+        run = fields[2]
 
         eval = 'both'
 
@@ -66,8 +72,7 @@ class Evaluator:
             else:
                 evalf = f
             #cmd = "semeval2014task5-evaluate -I --ref " +             self.reference_filepath + " --out " + self.mt_filepath + "> " + "CNRC.en-de.run1.best.log" + " 2> /dev/null"
-            cmd = "semeval2014task5-evaluate -I --ref    "+self.reference_filepath+" --out "+ evalf +"> "+ evalf.replace('.xml','.log') +" 2> /dev/null"
-            print cmd
+            cmd = "semeval2014task5-evaluate -I --ref en-de.gold.tokenised.xml --out "+ evalf +"> "+ evalf.replace('.xml','.log') +" 2> /dev/null"
             r = os.system(cmd)
             if eval == 'both':
                 os.rename(evalf, f) #undo temporary rename
@@ -82,8 +87,8 @@ class Evaluator:
                 os.rename(f, evalf)  #temporary rename so output files will be consistently named
             else:
                 evalf = f
-            print "evalf",evalf
-            cmd = "semeval2014task5-evaluate -I -a --ref "+self.reference_filepath+" --out "+ evalf +"> "+ evalf.replace('.xml','.log') +" 2> /dev/null"
+            #cmd = "semeval2014task5-evaluate -I -a --ref "+self.reference_filepath+" --out "+ evalf +"> "+ evalf.replace('.xml','.log') +" 2> /dev/null"
+            cmd = "semeval2014task5-evaluate -I --ref en-de.gold.tokenised.xml --out "+ evalf +"> "+ evalf.replace('.xml','.log') +" 2> /dev/null"
             r = os.system(cmd)
             if eval == 'both':
                 os.rename(evalf, f) #undo temporary rename
@@ -91,16 +96,19 @@ class Evaluator:
                 print("Failed prematurely!")
                 return
         print("Done")
-        os.chdir("../../")
+        #os.chdir("../../")
+        os.chdir("..")
 
     def read_score_summaries_into_memory(self):
         self.data = {}
 
         #Read score summaries into memory
         teams = set()
-        for filename in glob.glob("semeval2014task5/evaluation/*.summary.score"):
+        #for filename in glob.glob("semeval2014task5/evaluation/*.summary.score"):
+
+        os.chdir("./temp/")
+        for filename in glob.glob("*.summary.score"):
             with open(filename) as f:
-                print os.path.basename(filename).split('.',5)
                 team, langs, run, evtype, _,_ = os.path.basename(filename).split('.',5)
                 if not langs in self.data:
                     self.data[langs] = {}
@@ -112,7 +120,8 @@ class Evaluator:
                 teams.add(team)
                 f.readline()
                 d['ac'], d['wac'],d['rec'] = ( float(x) for x in f.readline().split(" ") )
-        print self.data
+
+        os.chdir("..")
 
     def createHTMLs(self):
         #Output graphs
@@ -167,6 +176,3 @@ class Evaluator:
         #plt.legend()
         if not os.path.exists(os.path.abspath("HTML output/")): os.makedirs(os.path.abspath("HTML output/"))
         plt.savefig(os.path.abspath("HTML output/"+evtype + ".png"))
-
-if __name__ == "__main__":
-    evaluator = Evaluator("/home/migue/Desktop/news-commentary-v8.de","/home/migue/Desktop/news-commentary-v8.en")
