@@ -43,15 +43,18 @@ def creation_date(path_to_file):
             return stat.st_mtime
 
 def filterTER (lines):
-    result = ''
+    '''
+    result = lines#''
     lines = lines.splitlines()
+
     for line in lines:
         if "Total TER:" in line:
             result += line.replace("Total TER:","")
         if "Warning, Invalid line:" in line:
             result = " There are lines unchanged from source to reference. HTER cannot work in those cases."
             break
-    return result + "\n"
+    '''
+    return lines + "\n"
 
 def filterBLEU (line, BLEU_type):
     if BLEU_type == "BLEU":      line = line.split(',', 1)[0]
@@ -62,8 +65,8 @@ def filterBLEU (line, BLEU_type):
     return line
 
 def filterGTM (line):
-    if "You should not be comparing equal runs" in line:
-        line = "There are lines unchanged from source to reference. GTM cannot work in those cases.\n"
+    #if "You should not be comparing equal runs" in line:
+        #line = "There are lines unchanged from source to reference. GTM cannot work in those cases.\n"
     return line
 
 def filter_output(proccess,method):
@@ -72,6 +75,8 @@ def filter_output(proccess,method):
     if not err :
         final_text = out
     else: final_text = err
+    print out
+    print err
     if method == "HTER": final_text = filterTER(final_text)
     if method == "GTM": final_text = filterGTM(final_text)
     if method == "PER" or method == "WER": pass

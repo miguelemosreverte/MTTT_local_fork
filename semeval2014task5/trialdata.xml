@@ -1,0 +1,20 @@
+<sentencepairs L1="en" L2="es">
+    <s id="1">
+        <input>Quiero <f id="1">know whether</f>
+        se puede hacer este tipo de objeción a lo que sólo es un
+        informe , no una propuesta legislativa , y si es algo que
+        puedo plantear el jueves .</input>
+        <ref>Quiero <f id="1">saber si</f>  se
+        puede hacer este tipo de objeción a lo que sólo es un informe
+        , no una propuesta legislativa , y si es algo que puedo
+        plantear el jueves .</ref>
+    </s>
+    <s id="2">
+        <input>Este reacondicionamiento , que <f id="1">lasted</f>  varios
+        meses , cortó esta importante vía de transporte entre el norte y
+        el sur de Europa .</input>
+        <ref>Este reacondicionamiento , que <f id="1">duró</f>  varios
+        meses , cortó esta importante vía de transporte entre
+        el norte y el sur de Europa .</ref>
+    </s>
+</sentencepairs>

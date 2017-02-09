@@ -70,6 +70,7 @@ install_and_import("webbrowser")
 from commands import *
 from files_processing import *
 from evaluation import *
+from createHTML import Evaluator
 from post_editing import PostEditing
 from constants import moses_dir_fn, is_valid_dir, is_valid_file, languages
 
@@ -295,7 +296,7 @@ class MyWindow(Gtk.Window):
         preprocessResultsText.set_editable(False)
         preprocessResultsText.set_cursor_visible(False)
         preprocessResultsText.set_wrap_mode(True)
-        self.preprocessResultsTextBuffer = preprocessResultsText.get_buffer()
+        self.preprocessevaluation_warning_label = preprocessResultsText.get_buffer()
         scrolledwindow.add(preprocessResultsText)
         preprocess_results_frame.add(scrolledwindow)
         grid.attach_next_to(preprocess_results_frame,
@@ -497,7 +498,7 @@ class MyWindow(Gtk.Window):
                     f.write("target_lang:"+self.target_lang+"\n")
         else:
             output += "ERROR. You need to complete all fields."
-        self.preprocessResultsTextBuffer.set_text(output)
+        self.preprocessevaluation_warning_label.set_text(output)
         os.chdir(self.original_directory)
 
     def _on_file_clicked(self, widget, labelToUpdate, tab_name = "undefined"):
@@ -583,7 +584,7 @@ class MyWindow(Gtk.Window):
         resultsText.set_editable(False)
         resultsText.set_cursor_visible(False)
         resultsText.set_wrap_mode(True)
-        self.trainingResultsTextBuffer = resultsText.get_buffer()
+        self.trainingevaluation_warning_label = resultsText.get_buffer()
         scrolledwindow.add(resultsText)
         training_results_frame.add(scrolledwindow)
         grid.attach_next_to(training_results_frame,
@@ -617,7 +618,7 @@ class MyWindow(Gtk.Window):
                                              self.lm_arpa,
                                              self.blm))
 
-            self.trainingResultsTextBuffer.set_text(output)
+            self.trainingevaluation_warning_label.set_text(output)
 
             # Train the translation model.
             out_file = generate_tm_fn(language_model_directory)
@@ -660,11 +661,11 @@ class MyWindow(Gtk.Window):
                 output += "Error. Unable to create moses.ini"
 
             # Set output to the output label.
-            self.trainingResultsTextBuffer.set_text(output)
+            self.trainingevaluation_warning_label.set_text(output)
         else:
             output = "ERROR: Uncompleted preprocessing. "
             output += "Please go to the first tab and complete the process."
-            self.trainingResultsTextBuffer.set_text(output)
+            self.trainingevaluation_warning_label.set_text(output)
         os.chdir(self.original_directory)
 
     def _set_translation(self):
@@ -751,7 +752,7 @@ class MyWindow(Gtk.Window):
         mtresultsText.set_editable(False)
         mtresultsText.set_cursor_visible(False)
         mtresultsText.set_wrap_mode(True)
-        self.mttrainingResultsTextBuffer = mtresultsText.get_buffer()
+        self.mttrainingevaluation_warning_label = mtresultsText.get_buffer()
         mtscrolledwindow.add(mtresultsText)
         mt_training_results_frame.add(mtscrolledwindow)
         grid.attach_next_to(mt_training_results_frame,
@@ -823,7 +824,7 @@ class MyWindow(Gtk.Window):
                 output += "ERROR. You need to load or create a model first."
 
         # Set output to the output label.
-        self.mttrainingResultsTextBuffer.set_text(output)
+        self.mttrainingevaluation_warning_label.set_text(output)
 
     def _set_evaluation(self):
         self.preparation = Gtk.VBox()
@@ -835,13 +836,13 @@ class MyWindow(Gtk.Window):
         # Evaluation Metrics: Source Text Picker
         st_label = Gtk.Label(" Machine translation")
         inside_grid.add(st_label)
-        self.evaluation_source = Gtk.Entry()
-        self.evaluation_source.set_text("")
-        inside_grid.add(self.evaluation_source)
+        self.evaluation_mt = Gtk.Entry()
+        self.evaluation_mt.set_text("")
+        inside_grid.add(self.evaluation_mt)
         self.st_button = Gtk.Button("Choose File")
         self.st_button.connect("clicked",
                                self._on_file_clicked,
-                               self.evaluation_source)
+                               self.evaluation_mt)
         inside_grid.add(self.st_button)
 
         #  Evaluation Metrics: Reference Text Picker
@@ -852,7 +853,7 @@ class MyWindow(Gtk.Window):
         self.evaluation_reference = Gtk.Entry()
         self.evaluation_reference.set_text("")
         inside_grid.attach_next_to(self.evaluation_reference,
-                                   self.evaluation_source,
+                                   self.evaluation_mt,
                                    Gtk.PositionType.BOTTOM, 1, 10)
         self.tt_button = Gtk.Button("Choose File")
         self.tt_button.connect("clicked",
@@ -889,50 +890,67 @@ class MyWindow(Gtk.Window):
 
         # Evaluation Metrics Frame.
         inside_grid = Gtk.Grid()
-        buttons_frame = Gtk.Frame(label="Evaluation Metrics")
+        buttons_frame = Gtk.Frame()
+
         # Evaluation Metrics: Evaluations Picker
-        self.check_WER = Gtk.CheckButton.new_with_label("WER")
-        self.check_PER = Gtk.CheckButton.new_with_label("PER")
-        self.check_HTER = Gtk.CheckButton.new_with_label("HTER")
-        self.check_GTM = Gtk.CheckButton.new_with_label("GTM")
-        self.check_BLEU = Gtk.CheckButton.new_with_label("BLEU")
-        self.check_BLEU2GRAM = Gtk.CheckButton.new_with_label("BLEU2GRAM")
-        self.check_BLEU3GRAM = Gtk.CheckButton.new_with_label("BLEU3GRAM")
-        self.check_BLEU4GRAM = Gtk.CheckButton.new_with_label("BLEU4GRAM")
-        inside_grid.add(self.check_WER)
-        inside_grid.add(self.check_PER)
-        inside_grid.add(self.check_HTER)
-        inside_grid.add(self.check_GTM)
-        inside_grid.attach_next_to(self.check_BLEU,
-                                   self.check_WER,
-                                   Gtk.PositionType.BOTTOM, 1, 1)
-        inside_grid.attach_next_to(self.check_BLEU2GRAM,
-                                   self.check_PER,
-                                   Gtk.PositionType.BOTTOM, 1, 1)
-        inside_grid.attach_next_to(self.check_BLEU3GRAM,
-                                   self.check_HTER,
-                                   Gtk.PositionType.BOTTOM, 1, 1)
-        inside_grid.attach_next_to(self.check_BLEU4GRAM,
-                                   self.check_GTM,
-                                   Gtk.PositionType.BOTTOM, 1, 1)
+        self.evaluation_options = [
+        "HTML output/table.html",
+        "HTML output/best.html",
+        "HTML output/oof.html",
+        ]
+        '''
+        self.resultsTable = Gtk.Button("Results Table")
+        self.resultsTable.connect("clicked", lambda    z: self.setEvaluationOption(0))
+        self.bestGraph = Gtk.Button("Best Graph")
+        self.bestGraph.connect("clicked", lambda z: self.setEvaluationOption(1))
+        self.outOfFiveGraph = Gtk.Button("Out of Five Graph")
+        self.outOfFiveGraph.connect("clicked", lambda z: self.setEvaluationOption(2))
+
+        self.evaluation_option = 0
+        inside_grid.add(self.resultsTable)
+        inside_grid.add(self.bestGraph)
+        inside_grid.add(self.outOfFiveGraph)
+        '''
         self.evaluate_button = Gtk.Button("Start evaluation ")
         self.evaluate_button.connect("clicked", self._evaluate)
         inside_grid.attach(self.evaluate_button, 0, 2, 3, 1)
+        self.evaluation_warning_label = Gtk.Label()
+        inside_grid.attach(self.evaluation_warning_label, 0, 3, 3, 1)
         buttons_frame.add(inside_grid)
         grid.add(buttons_frame)
 
         # Evaluation: Results
         inside_grid = Gtk.Grid()
-        evaluation_results_frame = Gtk.Frame(label="Results")
+        evaluation_results_frame = Gtk.Frame()
+
+        self.HTML_view = WebKit.WebView()
+        f = open('HTML output/table.html', 'w+')
+        f.write("");f.close()
+        uri = "HTML output/table.html"
+        uri = os.path.realpath(uri)
+        uri = urlparse.ParseResult('file', '', uri, '', '', '')
+        uri = urlparse.urlunparse(uri)
+        self.HTML_view.load_uri(uri)
+
+
+        self.table = Gtk.Table(1,1, True)
+        self.table.set_col_spacings(5)
+        self.table.set_row_spacings(5)
+        self.table.set_homogeneous(False)
+        self.table.set_hexpand(True)
+        self.table.set_vexpand(True)
+        self.table.attach(self.HTML_view, 0, 0+1, 0, 0+1)
+        self.image1 = Gtk.Image()
+        self.table.attach(self.image1, 0, 0+1, 1, 1+1)
+        self.image2 = Gtk.Image()
+        self.table.attach(self.image2 , 0, 0+1, 2, 2+1)
+
         scrolledwindow = Gtk.ScrolledWindow()
-        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_hexpand(False)
         scrolledwindow.set_vexpand(True)
-        resultsText = Gtk.TextView()
-        resultsText.set_editable(False)
-        resultsText.set_cursor_visible(False)
-        resultsText.set_wrap_mode(True)
-        self.resultsTextBuffer = resultsText.get_buffer()
-        scrolledwindow.add(resultsText)
+        scrolledwindow.add(self.table)
+
+
         evaluation_results_frame.add(scrolledwindow)
         grid.attach(evaluation_results_frame, 0, 1, 3, 1)
 
@@ -940,56 +958,52 @@ class MyWindow(Gtk.Window):
         self.notebook.insert_page(self.preparation,
                                   Gtk.Label('Evaluation'), 3)
 
+    def reload_evaluation_results(self):
+        self.HTML_view.reload_bypass_cache()
+        self.image1.set_from_file("HTML output/best.png")
+        self.image2.set_from_file("HTML output/oof.png")
+        self.table.show()
+        print "WHAT"
+
+    def setEvaluationOption(self,evaluation_option):
+        self.evaluation_option = evaluation_option
+        f = open(self.evaluation_options[self.evaluation_option], 'r')
+        html = f.read();f.close()
+        f = open('HTML output/selectedEvaluationOption.html', 'w+')
+        f.write(html);f.close()
+        self.HTML_view.reload_bypass_cache()
+
     def _evaluate(self, button):
-        fields_filled = (self.evaluation_source.get_text()
+        fields_filled = (self.evaluation_mt.get_text()
                 and self.evaluation_reference.get_text()
                 and self.evaluation_output.get_text())
-        files_exists = (is_valid_file(self.evaluation_source.get_text())
+        files_exists = (is_valid_file(self.evaluation_mt.get_text())
                 and is_valid_file(self.evaluation_reference.get_text())
                 and is_valid_dir(self.evaluation_output.get_text()))
         equal_ammount_of_lines = False
         if fields_filled and files_exists:
-            num_lines_source = sum(1 for line in open(self.evaluation_source.get_text()))
+            num_lines_source = sum(1 for line in open(self.evaluation_mt.get_text()))
             num_lines_reference = sum(1 for line in open(self.evaluation_reference.get_text()))
             equal_ammount_of_lines = num_lines_source == num_lines_reference
         if fields_filled and files_exists and equal_ammount_of_lines:
-            # checkbox_indexes["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM"]
-            checkbox_indexes = [False] * 8
-            if self.check_WER.get_active():
-                checkbox_indexes[0] = True
-            if self.check_PER.get_active():
-                checkbox_indexes[1] = True
-            if self.check_HTER.get_active():
-                checkbox_indexes[2] = True
-            if self.check_GTM.get_active():
-                checkbox_indexes[3] = True
-            if self.check_BLEU.get_active():
-                checkbox_indexes[4] = True
-            if self.check_BLEU2GRAM.get_active():
-                checkbox_indexes[5] = True
-            if self.check_BLEU3GRAM.get_active():
-                checkbox_indexes[6] = True
-            if self.check_BLEU4GRAM.get_active():
-                checkbox_indexes[7] = True
-            result = evaluate(checkbox_indexes,
-                              self.evaluation_source.get_text(),
-                              self.evaluation_reference.get_text())
-            evaluation_output_filename = self.evaluation_output.get_text()+"/evaluation_output.txt"
-            f = open(evaluation_output_filename, 'w')
-            f.write(result)
-            f.close()
-            self.resultsTextBuffer.set_text(result)
+
+            self.evaluator = Evaluator(
+            self.evaluation_reference.get_text(),
+            self.evaluation_mt.get_text())
+            self.evaluator.start_evaluation_process()
+            self.reload_evaluation_results()
+
         if not equal_ammount_of_lines:
-            self.resultsTextBuffer.set_text("ERROR. The files need to have the same ammount of lines.")
+            self.evaluation_warning_label.set_text("ERROR. The files need to have the same ammount of lines.")
         if not fields_filled:
-            self.resultsTextBuffer.set_text("ERROR. You need to complete all fields.")
+            self.evaluation_warning_label.set_text("ERROR. You need to complete all fields.")
         if not files_exists:
-            if not is_valid_file(self.evaluation_source.get_text()):
-                self.resultsTextBuffer.set_text("ERROR. The evaluation source file does not exist.")
+            if not is_valid_file(self.evaluation_mt.get_text()):
+                self.evaluation_warning_label.set_text("ERROR. The evaluation source file does not exist.")
             if not is_valid_file(self.evaluation_reference.get_text()):
-                self.resultsTextBuffer.set_text("ERROR. The evaluation reference file does not exist.")
+                self.evaluation_warning_label.set_text("ERROR. The evaluation reference file does not exist.")
             if not is_valid_dir(self.evaluation_output.get_text()):
-                self.resultsTextBuffer.set_text("ERROR. The evaluation output directory is not choosen.")
+                self.evaluation_warning_label.set_text("ERROR. The evaluation output directory is not choosen.")
 
     def init_persistent_post_editing_state(self):
         self.post_editing_source_text = ""
@@ -1129,7 +1143,7 @@ class MyWindow(Gtk.Window):
         if not fields_filled:
             self.post_editing_warning_label.set_text("ERROR. You need to complete all fields.")
         elif not files_exists:
-            if not is_valid_file(self.evaluation_source.get_text()):
+            if not is_valid_file(self.evaluation_mt.get_text()):
                 self.post_editing_warning_label.set_text("ERROR. The source file does not exist.")
             if not is_valid_file(self.evaluation_reference.get_text()):
                 self.post_editing_warning_label.set_text("ERROR. The reference file does not exist.")
