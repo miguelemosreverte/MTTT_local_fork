@@ -62,6 +62,8 @@ class Table:
         self.last_cell_focused_unedited_reference = None
         self.last_cell_focused_reference = None
         self.last_cell_focused_index = -1
+        self.local_focused_index_offset = -1
+        self.last_cell_focused = None
 
         table = Gtk.Table(1,1, True)
         self.table = table
@@ -75,6 +77,7 @@ class Table:
         self._constants_initializing()
         self.make_table_interface()
         self.update_table()
+
 
         # Post Editing: Term Search
         table_frame = Gtk.Frame()
@@ -205,9 +208,7 @@ class Table:
         self.last_cell_focused_source = self.tables_content[self.source_text_views][segment_index]
         self.last_cell_focused_reference = self.tables_content[self.reference_text_views][segment_index]
         #if not self.monolingual: self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
-
         self.change_last_focused_row_background_color(Gdk.RGBA(0.9, 1, 1, 1))
-
         self.last_cell_focused_index = segment_index
 
     def cell_in_translation_table_changed(self, text_buffer_object, segment_index):
@@ -373,7 +374,6 @@ class Table:
         insertions = []
         deletions = []
         for tag, i1, i2, j1, j2 in s.get_opcodes():
-            print tag,i1,i2,j1,j2
             if tag == "insert" or tag == "replace":insertions.append((j1,j2))
             if tag == "delete"or tag == "replace": deletions.append((i1,i2))
         return (insertions,deletions)
@@ -487,9 +487,29 @@ class Table:
             self.back_button.set_visible(True)
 
     def _back_in_table(self, button):
-        self._move_in_table(-1, self.table_type)
+        '''
+        if self.local_focused_index_offset == 0:
+            self._move_in_table(+1,self.table_type)
+        elif self.last_cell_focused_index > 0:
+            self.last_cell_focused_index -= 1
+            self.local_focused_index_offset -= 1
+        self.cell_in_translation_table_is_being_focused(None,None,self.last_cell_focused_index)
+        '''
+        if self.local_focused_index_offset == 1:
+            self._move_in_table(-1,self.table_type)
+        elif self.local_focused_index_offset > 0:
+            self.local_focused_index_offset -= 1
+        if self.last_cell_focused_index > 0:
+            self.last_cell_focused_index -= 1
+        self.cell_in_translation_table_is_being_focused(None,None,self.last_cell_focused_index)
     def _next_in_table(self, button):
-        self._move_in_table(+1,self.table_type)
+        if self.local_focused_index_offset >= self.tables_content[self.rows_ammount] -1:
+            self._move_in_table(+1,self.table_type)
+        elif self.local_focused_index_offset < self.tables_content[self.rows_ammount]:
+            self.local_focused_index_offset += 1
+        if self.last_cell_focused_index < len(self.tables_content[self.source_text_lines]):
+            self.last_cell_focused_index += 1
+        self.cell_in_translation_table_is_being_focused(None,None,self.last_cell_focused_index)
     def _increase_table_rows(self, button):
         self.tables_content[self.rows_ammount] += 1
         self.update_table()
