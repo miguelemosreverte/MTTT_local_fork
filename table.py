@@ -346,7 +346,7 @@ class Table:
         cellTextBuffer = cell.get_buffer()
         index = row_index + self.tables_content[self.table_index]
 
-        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=30)
+        text = '\n'.join(textwrap.wrap(self.tables_content[text_line_type][index].rstrip('\n').decode('utf-8'), width=50))
 
         cellTextBuffer.set_text(text)
         cellTextBuffer.create_tag("#F8CBCB",background="#F8CBCB")
@@ -358,7 +358,6 @@ class Table:
             if index in self.translation_reference_text_TextViews_modified_flag:
                 self.tables_content[self.reference_text_views][index].override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
 
-        cell.set_right_margin(20)
         cell.show()
         self.table.attach(
         cell,
